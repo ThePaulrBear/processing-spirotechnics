@@ -15,39 +15,45 @@ import paul.wintz.userinterface.optiontypes.OptionGroup;
  * selection box. When an item from the box is selected, than all of the controls change to match
  * that mode.
  * 
- * In effect, a ModeList is a special type of OptionGroup that has 
+ * In effect, a ModeList is a special type of OptionGroup that has a list of OptionGroups that can be selection.
  * @author PaulWintz
  *
  */
 @SuppressWarnings("serial")
 class ModeListPanel extends OptionsGroupPanel {
 	
-	public ModeListPanel (JPanel parent, final ModeList<? extends OptionGroup> option) {
-		super(parent, option, null);
-			
-		//add the combo box at the top
-		final JComboBox<OptionGroup> listItems_comboBox = new JComboBox<>();
-		for(OptionGroup mode : option.getList()){
-			listItems_comboBox.addItem(mode);
-		}
-		listItems_comboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				option.setCurrent((OptionGroup)  listItems_comboBox.getSelectedItem());
-				loadCurrentOptions(option);
-			}
-		});
-		listItems_comboBox.setMaximumSize(new Dimension(300, 30));
-		this.add(listItems_comboBox);
+	private class ModesComboBox extends JComboBox<OptionGroup> {
 		
-		loadCurrentOptions(option);
+		ModesComboBox(final ModeList<?> modes){
+			for(OptionGroup mode : modes.getList()){
+				addItem(mode);
+			}
+			
+			addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					modes.setCurrent((OptionGroup)  getSelectedItem());
+					loadCurrentOptions(modes);
+				}
+			});
+		}
+	}
+	
+	public ModeListPanel (JPanel parent, final ModeList<? extends OptionGroup> modeList) {
+		super(parent, modeList, null);
+					
+		//add the combo box at the top
+		final JComboBox<OptionGroup> modeSelectionBox = new ModesComboBox(modeList);
+		
+		this.add(modeSelectionBox);
+		
+		loadCurrentOptions(modeList);
 	}
 
 	/**
 	 * @param modeList
 	 */
 	private void loadCurrentOptions(ModeList<? extends OptionGroup> modeList) {
-		
-		this.updateList(modeList.getCurrent(), 2, null);
+		this.updateList(modeList.getCurrent(), 2 /*FIXME: create constant*/, null);
 	}
 	
 	

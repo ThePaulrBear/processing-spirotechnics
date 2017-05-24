@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
@@ -22,7 +23,7 @@ import paul.wintz.userinterface.optiontypes.UserInputOption;
 @SuppressWarnings("serial")
 abstract class OptionPanel <T extends UserInputOption> extends JPanel {
 	protected final T option;
-
+	
 	protected JLabel label;
 	
 	OptionPanel(JPanel parentPanel, T option){
@@ -37,7 +38,7 @@ abstract class OptionPanel <T extends UserInputOption> extends JPanel {
 		createControl();
 
 		Component spacer = Box.createVerticalStrut(10);
-		this.add(spacer);		
+		this.add(spacer);
 	} 
 	
 	protected void createLabel(){
@@ -77,6 +78,4 @@ abstract class OptionPanel <T extends UserInputOption> extends JPanel {
 		}	
 	}
 
-
-	
 }

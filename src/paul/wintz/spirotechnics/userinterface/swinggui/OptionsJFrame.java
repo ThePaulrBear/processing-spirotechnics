@@ -5,7 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import paul.wintz.userinterface.optiontypes.OptionGroup;
-import paul.wintz.userinterface.optiontypes.ValuedBooleanOption;
+import paul.wintz.userinterface.optiontypes.BooleanOption;
 import paul.wintz.userinterface.optiontypes.ValuedSliderOption;
 
 import java.awt.CardLayout;
@@ -63,7 +63,7 @@ public class OptionsJFrame extends JFrame {
 		optionList.add(new OptionGroup("Tab 1", 
 				new OptionGroup("Option Group 1",
 						new ValuedSliderOption(5, 20, 100, "Slider 1", false),
-						new ValuedBooleanOption(true, "Boolean Option")
+						new BooleanOption(true, "Boolean Option")
 						)
 				)
 		);
