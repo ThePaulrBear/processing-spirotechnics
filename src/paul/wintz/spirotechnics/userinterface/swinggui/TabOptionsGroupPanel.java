@@ -8,16 +8,17 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.BevelBorder;
 
 import paul.wintz.spirotechnics.modes.ModeList;
-import paul.wintz.spirotechnics.userinterface.optiontypes.BooleanOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.EventOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.FractionOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.ListOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.NumberOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.OptionGroup;
-import paul.wintz.spirotechnics.userinterface.optiontypes.OptionItem;
-import paul.wintz.spirotechnics.userinterface.optiontypes.SliderOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.UserInputOption;
+import paul.wintz.userinterface.optiontypes.BooleanOption;
+import paul.wintz.userinterface.optiontypes.EventOption;
+import paul.wintz.userinterface.optiontypes.FractionOption;
+import paul.wintz.userinterface.optiontypes.ListOption;
+import paul.wintz.userinterface.optiontypes.NumberOption;
+import paul.wintz.userinterface.optiontypes.OptionGroup;
+import paul.wintz.userinterface.optiontypes.OptionItem;
+import paul.wintz.userinterface.optiontypes.SliderOption;
+import paul.wintz.userinterface.optiontypes.UserInputOption;
 
+@SuppressWarnings("serial")
 class TabOptionsGroupPanel extends JPanel {
 	
 	TabOptionsGroupPanel(JPanel parent, JTabbedPane tabPane, OptionGroup optionList, JMenu eventMenu){
@@ -60,7 +61,7 @@ class TabOptionsGroupPanel extends JPanel {
 		} else if(opt instanceof NumberOption){
 			new NumberOptionPanel(this, (NumberOption) opt);
 		} else if(opt instanceof EventOption){
-			new EventOptionPanel ((EventOption) opt, eventMenu);
+			new EventMenuItem ((EventOption) opt, eventMenu);
 		} else if(opt instanceof BooleanOption){
 			new ToggleOptionPanel(this, (BooleanOption) opt);
 		} else if (opt instanceof FractionOption){

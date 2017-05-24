@@ -9,9 +9,10 @@ import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import paul.wintz.spirotechnics.userinterface.optiontypes.FractionOption;
+import paul.wintz.userinterface.optiontypes.FractionOption;
 
-class FractionOptionPanel extends AbstractOptionPanel<FractionOption>{	
+@SuppressWarnings("serial")
+class FractionOptionPanel extends OptionPanel<FractionOption>{	
 	private static final int SPINNER_WIDTH = 150;
 	private static final int SPINNER_HEIGHT = 20;
 	

@@ -8,9 +8,10 @@ import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import paul.wintz.spirotechnics.userinterface.optiontypes.NumberOption;
+import paul.wintz.userinterface.optiontypes.NumberOption;
 
-class NumberOptionPanel extends AbstractOptionPanel<NumberOption> {
+@SuppressWarnings("serial")
+class NumberOptionPanel extends OptionPanel<NumberOption> {
 
 	private static final int SPINNER_WIDTH = 150;
 	private static final int SPINNER_HEIGHT = 20;

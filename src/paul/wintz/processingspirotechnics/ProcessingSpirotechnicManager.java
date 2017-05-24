@@ -3,10 +3,12 @@ package paul.wintz.processingspirotechnics;
 import static paul.wintz.spirotechnics.InitialValues.SIDEBAR_WIDTH;
 
 import java.awt.EventQueue;
+import java.io.File;
 
 import paul.wintz.spirotechnics.SpirotechnicManager;
-import paul.wintz.spirotechnics.userinterface.UI;
 import paul.wintz.spirotechnics.userinterface.swinggui.OptionsJFrame;
+import paul.wintz.userinterface.HasValue;
+import paul.wintz.userinterface.optiontypes.NumberOption;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PGraphics;

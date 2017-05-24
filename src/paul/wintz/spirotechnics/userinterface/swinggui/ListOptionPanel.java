@@ -9,9 +9,10 @@ import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
-import paul.wintz.spirotechnics.userinterface.optiontypes.ListOption;
+import paul.wintz.userinterface.optiontypes.ListOption;
 
-public class ListOptionPanel<T> extends AbstractOptionPanel<ListOption<T>> {
+@SuppressWarnings("serial")
+public class ListOptionPanel<T> extends OptionPanel<ListOption<T>> {
 
 	public ListOptionPanel(JPanel parentPanel, ListOption<T> listOption) {
 		super(parentPanel, listOption);

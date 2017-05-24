@@ -8,7 +8,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import paul.wintz.spirotechnics.modes.ModeList;
-import paul.wintz.spirotechnics.userinterface.optiontypes.OptionGroup;
+import paul.wintz.userinterface.optiontypes.OptionGroup;
 
 /**
  * This class will allow switching between different paul.wintz.spirotechnics.modes. It will be a JPanel with a drop-down 
@@ -19,6 +19,7 @@ import paul.wintz.spirotechnics.userinterface.optiontypes.OptionGroup;
  * @author PaulWintz
  *
  */
+@SuppressWarnings("serial")
 class ModeListPanel extends OptionsGroupPanel {
 	
 	public ModeListPanel (JPanel parent, final ModeList<? extends OptionGroup> option) {

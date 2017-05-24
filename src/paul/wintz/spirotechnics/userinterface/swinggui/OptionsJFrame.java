@@ -4,9 +4,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import paul.wintz.spirotechnics.userinterface.optiontypes.OptionGroup;
-import paul.wintz.spirotechnics.userinterface.optiontypes.ValuedBooleanOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.ValuedSliderOption;
+import paul.wintz.userinterface.optiontypes.OptionGroup;
+import paul.wintz.userinterface.optiontypes.ValuedBooleanOption;
+import paul.wintz.userinterface.optiontypes.ValuedSliderOption;
 
 import java.awt.CardLayout;
 import java.awt.EventQueue;

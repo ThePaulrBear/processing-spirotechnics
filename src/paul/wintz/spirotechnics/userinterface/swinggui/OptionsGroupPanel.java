@@ -9,16 +9,17 @@ import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
 import paul.wintz.spirotechnics.modes.ModeList;
-import paul.wintz.spirotechnics.userinterface.optiontypes.BooleanOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.EventOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.FractionOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.ListOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.NumberOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.OptionGroup;
-import paul.wintz.spirotechnics.userinterface.optiontypes.OptionItem;
-import paul.wintz.spirotechnics.userinterface.optiontypes.SliderOption;
-import paul.wintz.spirotechnics.userinterface.optiontypes.UserInputOption;
+import paul.wintz.userinterface.optiontypes.BooleanOption;
+import paul.wintz.userinterface.optiontypes.EventOption;
+import paul.wintz.userinterface.optiontypes.FractionOption;
+import paul.wintz.userinterface.optiontypes.ListOption;
+import paul.wintz.userinterface.optiontypes.NumberOption;
+import paul.wintz.userinterface.optiontypes.OptionGroup;
+import paul.wintz.userinterface.optiontypes.OptionItem;
+import paul.wintz.userinterface.optiontypes.SliderOption;
+import paul.wintz.userinterface.optiontypes.UserInputOption;
 
+@SuppressWarnings("serial")
 class OptionsGroupPanel extends JPanel {
 	public static final int WIDTH = 400;
 	private JLabel jLabel;
@@ -67,21 +68,11 @@ class OptionsGroupPanel extends JPanel {
 	private void addOption(UserInputOption opt, JMenu eventMenu) {
 		if(opt == null) return;
 
-		if(opt instanceof SliderOption){
-			new SliderOptionPanel(this, (SliderOption) opt);
-		} else if(opt instanceof NumberOption){
-			new NumberOptionPanel(this, (NumberOption) opt);
-		} else if(opt instanceof EventOption){
-			new EventOptionPanel ((EventOption) opt, eventMenu);
-		} else if(opt instanceof BooleanOption){
-			new ToggleOptionPanel(this, (BooleanOption) opt);
-		} else if (opt instanceof FractionOption){
-			new FractionOptionPanel(this, (FractionOption) opt);
-		} else if(opt instanceof ListOption<?>){
-			new ListOptionPanel<>(this, (ListOption<?>) opt);
+		if(opt instanceof EventOption){
+			new EventMenuItem ((EventOption) opt, eventMenu);
 		} else {
-			System.err.println("Option not supported by GUI: " + opt.getClass().getSimpleName());
-		}	
+			OptionPanel.makeOptionPanel(opt, this);
+		}
 	}
 
 /**

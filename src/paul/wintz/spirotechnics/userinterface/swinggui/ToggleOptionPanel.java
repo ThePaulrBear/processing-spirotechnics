@@ -7,10 +7,10 @@ import javax.swing.JToggleButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import paul.wintz.spirotechnics.userinterface.optiontypes.BooleanOption;
+import paul.wintz.userinterface.optiontypes.BooleanOption;
 
 @SuppressWarnings("serial")
-class ToggleOptionPanel extends AbstractOptionPanel<BooleanOption> {
+class ToggleOptionPanel extends OptionPanel<BooleanOption> {
 	private static final int WIDTH = 200;
 	
 	ToggleOptionPanel(JPanel parentPanel, BooleanOption option) {

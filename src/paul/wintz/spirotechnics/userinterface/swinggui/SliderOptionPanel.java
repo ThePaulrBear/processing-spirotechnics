@@ -5,9 +5,10 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import paul.wintz.spirotechnics.userinterface.optiontypes.SliderOption;
+import paul.wintz.userinterface.optiontypes.SliderOption;
 
-class SliderOptionPanel extends AbstractOptionPanel<SliderOption>{	
+@SuppressWarnings("serial")
+class SliderOptionPanel extends OptionPanel<SliderOption>{	
 
 	SliderOptionPanel(JPanel parentPanel, SliderOption option) {
 		super(parentPanel, option);
