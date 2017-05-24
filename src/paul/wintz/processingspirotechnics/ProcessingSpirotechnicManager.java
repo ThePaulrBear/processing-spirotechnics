@@ -17,7 +17,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 	private final PApplet pApplet;
 	
 	public ProcessingSpirotechnicManager(PApplet pApplet) {
-		super(new PGraphicsCanvas(400, 400, 2), new MyDisplayer(pApplet), new MyToaster(pApplet), new MyLogger(pApplet));
+		super(new PGraphicsCanvas(400, 400, 2), new MyDisplayer(pApplet), new MyToaster(pApplet), new MyLogger(), new ProcessingGifRecording());
 		this.pApplet = pApplet;
 		
 		EventQueue.invokeLater(new Runnable() {
@@ -65,23 +65,20 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 	}
 	
 	final static class MyLogger implements SpirotechnicManager.LogCallback {
-		private final PApplet pApplet;
-		public MyLogger(PApplet pApplet) {
-			this.pApplet = pApplet;
-		}
+		public MyLogger() {		}
 
 		@Override
-		public void logStd(String message) {
+		public void logStd(String tag, String message) {
 			System.out.println(message);
 		}
 
 		@Override
-		public void logError(String message) {
+		public void logError(String tag, String message) {
 			System.err.println(message);
 		}
 
 		@Override
-		public void logError(Exception e) {
+		public void logError(String tag, String message, Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -101,5 +98,70 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 			pApplet.scale(1 / displayScale, 1 / displayScale);
 		}
 	}
+	
+	/**
+	 * Using this library: https://github.com/01010101/GifAnimation
+	 * @author PaulWintz
+	 *
+	 */
+	private static class ProcessingGifRecording implements GifRecorder<PGraphics>{	
+		private gifAnimation.GifMaker gifMaker;
+		private File file;
+		private HasValue<Integer> fpsOption;
+		private int framesRecorded = 0;
+		private boolean isOpen = false;
+				
+		private void printMaxFramesToBeUnderGivenFileSize(long maxSize){
+			double sizePerFrame = (double) file.length() / (double) framesRecorded;
+			double maxNumber = (double) maxSize / sizePerFrame;
+			System.out.println("The maximum number of frames is: " + maxNumber);
+		}
 
+		@Override
+		public void open(File file) {
+			this.file = file;
+			System.out.println("Beginning GIF record to: " + file.getPath());
+			framesRecorded = 0;
+			gifMaker = ProcessingUtils.newGifMaker(file);
+			gifMaker.setRepeat(0);
+						
+			isOpen = true;
+		}
+
+		@Override
+		public void addFrame(PGraphics frame) {
+			if(!isOpen) throw new IllegalStateException("The GIF is not open");
+			
+			int frameDelay = (int) (1000.0 / (double) fpsOption.getValue());
+			gifMaker.setDelay(frameDelay);
+			gifMaker.addFrame(frame);
+			framesRecorded++;
+		}
+
+		@Override
+		public int getFrameCount() {
+			if(isOpen)
+				return framesRecorded;
+			else
+				return -1;
+		}
+		
+		public void close() throws IllegalStateException {
+			if(!isOpen) throw new IllegalStateException("The GIF is not open");
+			isOpen = false;
+			
+			gifMaker.finish();
+			System.out.println("GIF closed. Number of frames: " + framesRecorded);
+			
+			printMaxFramesToBeUnderGivenFileSize((long) 3e6);
+			
+			gifMaker = null;
+			file = null;		
+		}
+
+		@Override
+		public void setFPSOption(HasValue<Integer> fpsOption) {
+			this.fpsOption = fpsOption;
+		}
+	}
 }

@@ -1,12 +1,12 @@
 package paul.wintz.processingspirotechnics;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 
 import gifAnimation.GifMaker;
 import paul.wintz.spirotechnics.canvas.SaveType;
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PGraphics;
 
 public class ProcessingUtils {
@@ -37,11 +37,7 @@ public class ProcessingUtils {
 	public static PGraphics createGraphics(int i, int j) throws IllegalArgumentException {
 		if(i < 1 || j < 1) throw new IllegalArgumentException("Size must be at least 1x1!");
 		PGraphics graphic = papplet.createGraphics(i,j);
-		graphic.background(0);
-		graphic.clear();
-		graphic.loadPixels();
-		if(graphic.pixels == null) throw new IllegalStateException("The graphic was not created!");
-//		if(!graphic.isLoaded()) throw new IllegalStateException("The graphic was not created!");
+		graphic.beginDraw();
 		return graphic;
 	}
 
@@ -55,9 +51,9 @@ public class ProcessingUtils {
 	 * @param fileName
 	 * @return
 	 */
-	public static GifMaker newGifMaker(String fileName) {
+	public static GifMaker newGifMaker(File file) {
 		//GifMaker(PApplet parent, String filename, int quality, int transparentColor)
-		return new GifMaker(papplet, fileName);
+		return new GifMaker(papplet, file.getPath());
 	}
 
 	static void openFolder() {

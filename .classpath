@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Spirotechinic"/>
-	<classpathentry kind="lib" path="C:/Users/PaulWintz/EclipseWorkspace/External Jars/Processing-2.2.1/gifAnimation.jar"/>
 	<classpathentry kind="lib" path="C:/Users/PaulWintz/EclipseWorkspace/External Jars/Processing-3.3/core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/PaulWintz/EclipseWorkspace/External Jars/Processing-3.3/GifAnimation.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

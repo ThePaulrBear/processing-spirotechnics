@@ -84,8 +84,10 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 		if(transforms!= null) pushTransformations(layer, transforms);
 		{
 			layer.beginShape();
-			for(Vector pnt: points){
-				layer.vertex((float) pnt.x(), (float) pnt.y());
+			synchronized (points) {
+				for(Vector pnt: points){
+					layer.vertex((float) pnt.x(), (float) pnt.y());
+				}
 			}
 			layer.endShape();
 		}
