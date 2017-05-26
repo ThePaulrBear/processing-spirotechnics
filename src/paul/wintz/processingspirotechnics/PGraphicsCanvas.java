@@ -108,8 +108,7 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 
 	@Override
 	public void background(Painter painter){
-		int fill = 0;//TODO: painter.getFill();
-		if(fill < 0) throw new IllegalStateException("Fill cannot be less than zero!");
+		int fill = painter.getFill();
 		layers.get(painter.layer).background(fill);
 	}
 

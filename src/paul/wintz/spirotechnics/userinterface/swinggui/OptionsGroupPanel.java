@@ -62,7 +62,7 @@ class OptionsGroupPanel extends JPanel {
 	}
 	
 	/**
-	 * @param eventMenu TODO
+	 * @param eventMenu
 	 * @param options
 	 */
 	private void addOption(UserInputOption opt, JMenu eventMenu) {
@@ -79,7 +79,7 @@ class OptionsGroupPanel extends JPanel {
  * 
  * @param optionList
  * @param afterNdx the first item to delete/replace
- * @param eventMenu TODO
+ * @param eventMenu
  */
 	public void updateList(OptionGroup optionList, int afterNdx, JMenu eventMenu){
 		while(this.getComponentCount() > afterNdx){

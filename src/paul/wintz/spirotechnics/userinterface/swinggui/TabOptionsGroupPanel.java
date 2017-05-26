@@ -50,7 +50,7 @@ class TabOptionsGroupPanel extends JPanel {
 	}
 	
 	/**
-	 * @param eventMenu TODO
+	 * @param eventMenu
 	 * @param options
 	 */
 	private void addOption(UserInputOption opt, JMenu eventMenu) {
