@@ -19,7 +19,7 @@ class OptionsGroupPanel extends JPanel {
 	public static final int WIDTH = 400;
 	private final JLabel jLabel;
 
-	OptionsGroupPanel(JPanel parent, OptionGroup optionList, JMenu eventMenu){
+	OptionsGroupPanel(JPanel parent, OptionGroup optionList, JMenu eventMenu) {
 		setMaximumSize(new Dimension(WIDTH, Integer.MAX_VALUE));
 		setMinimumSize(new Dimension(WIDTH, 0));
 
@@ -38,17 +38,17 @@ class OptionsGroupPanel extends JPanel {
 	}
 
 	private void addList(OptionGroup optionList, JMenu eventMenu) {
-		for(final OptionItem o : optionList){
+		for (final OptionItem o : optionList) {
 			add(o, eventMenu);
 		}
 	}
 
 	public void add(OptionItem o, JMenu eventMenu) {
-		if(o instanceof ModeList){
+		if (o instanceof ModeList) {
 			new ModeListPanel(this, (ModeList<?>) o);
-		} else if(o instanceof OptionGroup){
+		} else if (o instanceof OptionGroup) {
 			new OptionsGroupPanel(this, (OptionGroup) o, eventMenu);
-		} else if(o instanceof UserInputOption){
+		} else if (o instanceof UserInputOption) {
 			addOption((UserInputOption) o, eventMenu);
 		}
 	}
@@ -58,10 +58,11 @@ class OptionsGroupPanel extends JPanel {
 	 * @param options
 	 */
 	private void addOption(UserInputOption opt, JMenu eventMenu) {
-		if(opt == null) return;
+		if (opt == null)
+			return;
 
-		if(opt instanceof EventOption){
-			new EventMenuItem ((EventOption) opt, eventMenu);
+		if (opt instanceof EventOption) {
+			new EventMenuItem((EventOption) opt, eventMenu);
 		} else {
 			OptionPanel.makeOptionPanel(opt, this);
 		}
@@ -70,11 +71,12 @@ class OptionsGroupPanel extends JPanel {
 	/**
 	 *
 	 * @param optionList
-	 * @param afterNdx the first item to delete/replace
+	 * @param afterNdx
+	 *            the first item to delete/replace
 	 * @param eventMenu
 	 */
-	public void updateList(OptionGroup optionList, int afterNdx, JMenu eventMenu){
-		while(getComponentCount() > afterNdx){
+	public void updateList(OptionGroup optionList, int afterNdx, JMenu eventMenu) {
+		while (getComponentCount() > afterNdx) {
 			this.remove(afterNdx);
 		}
 

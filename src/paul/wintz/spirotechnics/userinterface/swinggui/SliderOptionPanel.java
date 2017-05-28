@@ -9,7 +9,7 @@ import paul.wintz.userinterface.optiontypes.IntegerRangeOption;
 import paul.wintz.userinterface.optiontypes.UserInputOption.OptionUpdatedCallback;
 
 @SuppressWarnings("serial")
-class SliderOptionPanel extends OptionPanel<IntegerRangeOption>{
+class SliderOptionPanel extends OptionPanel<IntegerRangeOption> {
 
 	SliderOptionPanel(JPanel parentPanel, IntegerRangeOption option) {
 		super(parentPanel, option);
@@ -20,7 +20,7 @@ class SliderOptionPanel extends OptionPanel<IntegerRangeOption>{
 			setMaximum(option.getMax());
 			setMinimum(option.getMin());
 
-			if(option.getNumberOfValuesInRange() < 15){
+			if (option.getNumberOfValuesInRange() < 15) {
 				setPaintTicks(true);
 				setMinorTickSpacing(1);
 				setSnapToTicks(true);

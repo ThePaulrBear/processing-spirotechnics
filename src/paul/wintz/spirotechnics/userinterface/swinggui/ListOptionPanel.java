@@ -20,21 +20,22 @@ public class ListOptionPanel<T> extends OptionPanel<ListOption<T>> {
 		public ItemSelectionButton(final T item) {
 			setText(item.toString());
 			addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if(isSelected()) option.setSelected(item);	
+					if (isSelected())
+						option.setSelected(item);
 				}
 			});
 		}
 	}
-	
+
 	@Override
 	protected void createControl() {
 		JPanel radioPanel = new JPanel(new GridLayout(0, 1));
-		for(final T item : option){
+		for (final T item : option) {
 			final JToggleButton butt = new ItemSelectionButton(item);
-			
+
 			radioPanel.add(butt);
 		}
 		this.add(radioPanel);

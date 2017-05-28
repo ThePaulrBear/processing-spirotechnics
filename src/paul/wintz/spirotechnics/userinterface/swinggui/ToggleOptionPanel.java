@@ -13,7 +13,7 @@ import paul.wintz.userinterface.optiontypes.UserInputOption.OptionUpdatedCallbac
 
 @SuppressWarnings("serial")
 class ToggleOptionPanel extends OptionPanel<BooleanOption> {
-	
+
 	ToggleOptionPanel(JPanel parentPanel, BooleanOption option) {
 		super(parentPanel, option);
 	}
@@ -22,26 +22,26 @@ class ToggleOptionPanel extends OptionPanel<BooleanOption> {
 		public OptionToggle(final BooleanOption option) {
 			setText(option.getDescription());
 			setAlignmentX(CENTER_ALIGNMENT);
-			
+
 			addChangeListener(new ChangeListener() {
-				
+
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					
+
 					option.setValue(isSelected());
 				}
 			});
 			setSelected(option.getValue());
-			
+
 			addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
 					option.setValue(isSelected());
 					updateLabel();
 				}
 			});
-			
+
 			option.addOptionUpdatedCallback(new OptionUpdatedCallback() {
-				
+
 				@Override
 				public void onUpdate() {
 					setSelected(option.getValue());
@@ -50,17 +50,17 @@ class ToggleOptionPanel extends OptionPanel<BooleanOption> {
 			});
 		}
 	}
-	
+
 	@Override
 	protected void createControl() {
 		final JToggleButton button = new OptionToggle(option);
 		this.add(button);
-		
+
 	}
 
 	@Override
 	protected void createLabel() {
 		super.createLabel();
 		label.setVisible(false);
-	}	
+	}
 }

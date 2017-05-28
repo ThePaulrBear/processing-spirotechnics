@@ -14,14 +14,14 @@ public class SpiroPApplet extends PApplet {
 
 	private final SpirotechnicInfoDrawer infoDrawer = new SpirotechnicInfoDrawer();
 
-	public static void main(String[] args){
-		final String[] pargs = {"SpiroPapplet"};
+	public static void main(String[] args) {
+		final String[] pargs = { "SpiroPapplet" };
 		final SpiroPApplet sApp = new SpiroPApplet();
 		PApplet.runSketch(pargs, sApp);
 	}
 
 	@Override
-	public void settings(){
+	public void settings() {
 		size(InitialValues.INITIAL_WINDOW_WIDTH, InitialValues.INITIAL_WINDOW_HEIGHT, FX2D);
 		smooth(8);
 
@@ -31,7 +31,8 @@ public class SpiroPApplet extends PApplet {
 	public void setup() {
 
 		frameRate(InitialValues.TARGET_FRAME_RATE);
-		//Initialize the ProcessingUtils class for static access to processing methods
+		// Initialize the ProcessingUtils class for static access to processing
+		// methods
 		new ProcessingUtils(this);
 
 		manager = new ProcessingSpirotechnicManager(this);
@@ -40,7 +41,7 @@ public class SpiroPApplet extends PApplet {
 	@Override
 	public void draw() {
 
-		//clear the PApplet window
+		// clear the PApplet window
 		this.background(50);
 
 		manager.drawFrame();
@@ -50,24 +51,25 @@ public class SpiroPApplet extends PApplet {
 
 	@Override
 	public void keyPressed() {
-		//manager.getUserInterface().keyPressed(key, keyCode);
+		// manager.getUserInterface().keyPressed(key, keyCode);
 	}
 
 	void drawText() {
-		//		final int divisions = 25;
-		//		SampleLine sampleLine = colorManager.getSampleLine(divisions);
-		//		// DRAW COLOR BARS BENEATH TEXT
-		//		for (int j = 0; j < divisions; j++) {
-		//			strokeWeight(sampleLine.getThicknesses(j));
-		//			stroke(sampleLine.getColors(j));
+		// final int divisions = 25;
+		// SampleLine sampleLine = colorManager.getSampleLine(divisions);
+		// // DRAW COLOR BARS BENEATH TEXT
+		// for (int j = 0; j < divisions; j++) {
+		// strokeWeight(sampleLine.getThicknesses(j));
+		// stroke(sampleLine.getColors(j));
 		//
-		//			float barLength= 100;
-		//			float segmentLength = barLength / divisions;
-		//			float y = textOrginY + (float) (- 1) * textSpacing + 5;
-		//			float x = textOrginX + j * segmentLength;
-		//			for (int f = 0; f < manager.getDrawingManager().getCyclesToDraw(); f++)
-		//				line(x, y, x + segmentLength, y);
-		//		}
+		// float barLength= 100;
+		// float segmentLength = barLength / divisions;
+		// float y = textOrginY + (float) (- 1) * textSpacing + 5;
+		// float x = textOrginX + j * segmentLength;
+		// for (int f = 0; f < manager.getDrawingManager().getCyclesToDraw();
+		// f++)
+		// line(x, y, x + segmentLength, y);
+		// }
 		infoDrawer.draw();
 
 	}
@@ -75,7 +77,8 @@ public class SpiroPApplet extends PApplet {
 	private class SpirotechnicInfoDrawer {
 		final int x = 5;
 		final int textSize = 12;
-		public void draw(){
+
+		public void draw() {
 			// text settings
 
 			textSize(textSize);
@@ -84,9 +87,9 @@ public class SpiroPApplet extends PApplet {
 			final List<ConditionStringPair> conditionStrings = manager.getInformant().getConditionedStrings();
 
 			int lineNumber = 0;
-			for(final ConditionStringPair pair : conditionStrings){
+			for (final ConditionStringPair pair : conditionStrings) {
 
-				switch(pair.getCondition()){
+				switch (pair.getCondition()) {
 				case DRAWING:
 					fill(255);
 					break;
@@ -98,7 +101,7 @@ public class SpiroPApplet extends PApplet {
 					break;
 				}
 
-				for(final String s : pair.getText().split("\n")){
+				for (final String s : pair.getText().split("\n")) {
 					text(s, x, upperY(lineNumber));
 
 					lineNumber++;
@@ -106,7 +109,7 @@ public class SpiroPApplet extends PApplet {
 				lineNumber++;
 			}
 
-			fill(255); //Make text white again!
+			fill(255); // Make text white again!
 			final ArrayList<String> lowerText = manager.getInfo();
 			lowerText.add(0, "frameRate: " + round(frameRate) + " fps");
 
@@ -115,16 +118,15 @@ public class SpiroPApplet extends PApplet {
 			}
 		}
 
-		private int upperY(int line){
+		private int upperY(int line) {
 			return (1 + line) * (textSize + 2);
 		}
 
-		private int lowerY(int line){
+		private int lowerY(int line) {
 			return height - (line + 1) * textSize;
 		}
 
 	}
-
 
 	/**
 	 * Save the screen at closing.

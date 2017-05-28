@@ -20,15 +20,15 @@ class NumberOptionPanel extends OptionPanel<NumberOption> {
 	private class NumberOptionSpinner extends JSpinner {
 		public NumberOptionSpinner(final NumberOption option) {
 			setValue(option.getValue());
-			
-			addChangeListener(new ChangeListener() {	
+
+			addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					option.setValue((int) getValue());
-					updateLabel();	
+					updateLabel();
 				}
 			});
-			
+
 			option.addOptionUpdatedCallback(new OptionUpdatedCallback() {
 				@Override
 				public void onUpdate() {
@@ -38,7 +38,7 @@ class NumberOptionPanel extends OptionPanel<NumberOption> {
 			});
 		}
 	}
-	
+
 	@Override
 	protected void createControl() {
 		final JSpinner spinner = new NumberOptionSpinner(option);

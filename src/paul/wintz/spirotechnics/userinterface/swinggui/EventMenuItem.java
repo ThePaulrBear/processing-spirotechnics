@@ -10,16 +10,16 @@ import paul.wintz.userinterface.optiontypes.EventOption;
 
 @SuppressWarnings("serial")
 class EventMenuItem extends JMenuItem {
-	
+
 	EventMenuItem(final EventOption option, JMenu eventMenu) {
-	
+
 		JMenuItem menuItem = new JMenuItem(option.getDescription());
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				option.addToQueue();
 			}
 		});
-		
+
 		eventMenu.add(menuItem);
 	}
 }
