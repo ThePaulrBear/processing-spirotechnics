@@ -34,7 +34,7 @@ public class ProcessingUtils {
 		return papplet.map((float) value, startDomain, stopDomain, startRange, stopRange);
 	}
 
-	public static PGraphics createGraphics(int i, int j) throws IllegalArgumentException {
+	public static PGraphics createPGraphics(int i, int j) throws IllegalArgumentException {
 		if(i < 1 || j < 1) throw new IllegalArgumentException("Size must be at least 1x1!");
 		PGraphics graphic = papplet.createGraphics(i,j);
 		graphic.beginDraw();

@@ -50,7 +50,7 @@ public class SpiroPApplet extends PApplet {
 
 	@Override
 	public void keyPressed() {
-		manager.getUserInterface().keyPressed(key, keyCode);
+		//manager.getUserInterface().keyPressed(key, keyCode);
 	}
 
 	void drawText() {

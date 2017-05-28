@@ -15,7 +15,7 @@ import paul.wintz.userinterface.optiontypes.ListOption;
 import paul.wintz.userinterface.optiontypes.NumberOption;
 import paul.wintz.userinterface.optiontypes.OptionGroup;
 import paul.wintz.userinterface.optiontypes.OptionItem;
-import paul.wintz.userinterface.optiontypes.SliderOption;
+import paul.wintz.userinterface.optiontypes.IntegerRangeOption;
 import paul.wintz.userinterface.optiontypes.UserInputOption;
 
 @SuppressWarnings("serial")
@@ -56,8 +56,8 @@ class TabOptionsGroupPanel extends JPanel {
 	private void addOption(UserInputOption opt, JMenu eventMenu) {
 		if(opt == null) return;
 
-		if(opt instanceof SliderOption){
-			new SliderOptionPanel(this, (SliderOption) opt);
+		if(opt instanceof IntegerRangeOption){
+			new SliderOptionPanel(this, (IntegerRangeOption) opt);
 		} else if(opt instanceof NumberOption){
 			new NumberOptionPanel(this, (NumberOption) opt);
 		} else if(opt instanceof EventOption){

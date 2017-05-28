@@ -17,7 +17,7 @@ import paul.wintz.userinterface.optiontypes.EventOption;
 import paul.wintz.userinterface.optiontypes.FractionOption;
 import paul.wintz.userinterface.optiontypes.ListOption;
 import paul.wintz.userinterface.optiontypes.NumberOption;
-import paul.wintz.userinterface.optiontypes.SliderOption;
+import paul.wintz.userinterface.optiontypes.IntegerRangeOption;
 import paul.wintz.userinterface.optiontypes.UserInputOption;
 
 @SuppressWarnings("serial")
@@ -63,8 +63,8 @@ abstract class OptionPanel <T extends UserInputOption> extends JPanel {
 		if(option == null) throw new IllegalArgumentException("Option cannot be null");
 		if(parent == null) throw new IllegalArgumentException("Parent panel cannot be null");
 
-		if(option instanceof SliderOption){
-			return new SliderOptionPanel(parent, (SliderOption) option);
+		if(option instanceof IntegerRangeOption){
+			return new SliderOptionPanel(parent, (IntegerRangeOption) option);
 		} else if(option instanceof NumberOption){
 			return new NumberOptionPanel(parent, (NumberOption) option);
 		} else if(option instanceof BooleanOption){
