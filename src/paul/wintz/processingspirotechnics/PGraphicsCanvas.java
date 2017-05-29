@@ -17,6 +17,8 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 	private int width, height;
 	private float scale, rotation, centerX, centerY;
 
+	private final PGraphics compositeImage;
+
 	public PGraphicsCanvas(int width, int height, int numLayers) {
 		if (numLayers < 1)
 			throw new IllegalArgumentException("There must be at least one layer");
@@ -26,11 +28,12 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 		for (int i = 0; i < numLayers; i++) {
 			layers.add(createLayer());
 		}
+		compositeImage = createLayer();
 	}
 
 	/**
 	 * Draw a line from (x0,y0) to (x1,y1)
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 *             if the stroke is less than zero, or the layer does not exist.
 	 */
@@ -132,27 +135,29 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 
 		for (final PGraphics layer : layers) {
 			layer.setSize(width, height);
+			layer.beginDraw();
 		}
+		compositeImage.setSize(width, width);
+		compositeImage.beginDraw();
 	}
 
 	protected PGraphics createLayer() {
-		final PGraphics layer = ProcessingUtils.createPGraphics(width, height);
-		// layer.strokeCap(PConstants.SQUARE);
-		return layer;
+		return ProcessingUtils.createPGraphics(width, height);
 	}
 
 	@Override
 	public PGraphics getImage() {
-		final PGraphics image = createLayer();
-		image.beginDraw();
+
+		compositeImage.beginDraw();
+		//		compositeImage.clear();
 
 		for (final PGraphics layer : layers) {
 			layer.endDraw();
-			image.image(layer, 0, 0);
+			compositeImage.image(layer, 0, 0);
 			layer.beginDraw();
 		}
-		image.endDraw();
-		return image;
+		compositeImage.endDraw();
+		return compositeImage;
 	}
 
 	private PGraphics bindPainter(Painter painter) {
@@ -252,7 +257,7 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 
 	/**
 	 * Sets short-term transformations.
-	 * 
+	 *
 	 * @param layer
 	 * @param transforms
 	 */
@@ -271,7 +276,7 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 
 	/**
 	 * Unsets the short-term transformations.
-	 * 
+	 *
 	 * @param layer
 	 */
 	private void popTransformations(PGraphics layer) {

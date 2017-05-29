@@ -22,7 +22,7 @@ public class ProcessingUtils {
 
 	/**
 	 * Maps a value from the domain specified into the given range.
-	 * 
+	 *
 	 * @param value
 	 * @param startDomain
 	 * @param stopDomain
@@ -35,10 +35,10 @@ public class ProcessingUtils {
 		return papplet.map((float) value, startDomain, stopDomain, startRange, stopRange);
 	}
 
-	public static PGraphics createPGraphics(int i, int j) throws IllegalArgumentException {
-		if (i < 1 || j < 1)
+	public static PGraphics createPGraphics(int width, int height) throws IllegalArgumentException {
+		if (width < 1 || height < 1)
 			throw new IllegalArgumentException("Size must be at least 1x1!");
-		PGraphics graphic = papplet.createGraphics(i, j);
+		final PGraphics graphic = papplet.createGraphics(width, height);
 		graphic.beginDraw();
 		return graphic;
 	}
@@ -50,7 +50,7 @@ public class ProcessingUtils {
 	/**
 	 * Create a new GifMaker. <br>
 	 * Note that the size of the GIF is <b> not </b> set here.
-	 * 
+	 *
 	 * @param fileName
 	 * @return
 	 */
@@ -63,7 +63,7 @@ public class ProcessingUtils {
 	static void openFolder() {
 		try {
 			ProcessingUtils.DESKTOP.open(SaveType.getBaseFolder());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			e.printStackTrace();
 		}
 	}
