@@ -137,19 +137,18 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 			layer.setSize(width, height);
 			layer.beginDraw();
 		}
-		compositeImage.setSize(width, width);
+		compositeImage.setSize(width, height);
 		compositeImage.beginDraw();
 	}
 
-	protected PGraphics createLayer() {
+	protected final PGraphics createLayer() {
 		return ProcessingUtils.createPGraphics(width, height);
 	}
 
 	@Override
 	public PGraphics getImage() {
-
 		compositeImage.beginDraw();
-		//		compositeImage.clear();
+		compositeImage.clear();
 
 		for (final PGraphics layer : layers) {
 			layer.endDraw();

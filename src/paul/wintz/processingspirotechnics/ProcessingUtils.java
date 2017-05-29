@@ -68,4 +68,8 @@ public class ProcessingUtils {
 		}
 	}
 
+	public static boolean isInititialized() {
+		return !(papplet == null);
+	}
+
 }

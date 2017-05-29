@@ -123,7 +123,7 @@ public class SpiroPApplet extends PApplet {
 		}
 
 		private int lowerY(int line) {
-			return height - (line + 1) * textSize;
+			return height - (line + 1) * (textSize + 2);
 		}
 
 	}

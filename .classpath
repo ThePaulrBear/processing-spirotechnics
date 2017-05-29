@@ -5,5 +5,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Spirotechinic"/>
 	<classpathentry kind="lib" path="C:/Users/PaulWintz/EclipseWorkspace/External Jars/Processing-3.3/core.jar"/>
 	<classpathentry kind="lib" path="C:/Users/PaulWintz/EclipseWorkspace/External Jars/Processing-3.3/GifAnimation.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
