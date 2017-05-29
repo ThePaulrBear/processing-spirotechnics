@@ -207,40 +207,40 @@ public class PGraphicsCanvasTest {
 		}
 	}
 
-	@Test
-	public final void testDrawPath() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testDrawPolygon() {
-		fail("Not yet implemented"); // TODO
-	}
+	//	@Test
+	//	public final void testDrawPath() {
+	//		fail("Not yet implemented"); // TODO
+	//	}
+	//
+	//	@Test
+	//	public final void testDrawPolygon() {
+	//		fail("Not yet implemented"); // TODO
+	//	}
 
 	@Test
 	public final void testHandleNewFrame() {
 		canvas.handleNewFrame();
 	}
 
-	@Test
-	public final void testSaveImage() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetRotationTransformation() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetTranslationTransformation() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testGetScaleTransformation() {
-		fail("Not yet implemented"); // TODO
-	}
+	//	@Test
+	//	public final void testSaveImage() {
+	//		fail("Not yet implemented"); // TODO
+	//	}
+	//
+	//	@Test
+	//	public final void testGetRotationTransformation() {
+	//		fail("Not yet implemented"); // TODO
+	//	}
+	//
+	//	@Test
+	//	public final void testGetTranslationTransformation() {
+	//		fail("Not yet implemented"); // TODO
+	//	}
+	//
+	//	@Test
+	//	public final void testGetScaleTransformation() {
+	//		fail("Not yet implemented"); // TODO
+	//	}
 
 	private static void assertSize(int expectedWidth, int expectedHeight, PGraphicsCanvas canvas){
 		assertEquals(expectedWidth, canvas.getWidth());

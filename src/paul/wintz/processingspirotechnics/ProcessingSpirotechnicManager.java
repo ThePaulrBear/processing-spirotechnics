@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import java.io.File;
 
 import paul.wintz.spirotechnics.SpirotechnicManager;
+import paul.wintz.spirotechnics.canvas.SaveType;
 import paul.wintz.spirotechnics.userinterface.swinggui.OptionsJFrame;
 import paul.wintz.userinterface.HasValue;
 import processing.core.PApplet;
@@ -16,7 +17,15 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 	private final PApplet pApplet;
 
 	public ProcessingSpirotechnicManager(PApplet pApplet) {
-		super(new PGraphicsCanvas(400, 400, 2), new MyDisplayer(pApplet), new MyToaster(pApplet), new MyLogger(),
+		super(
+				//FIXME: Find a better way to set the canvas size such that it matches the current settings
+				new PGraphicsCanvas(
+						SaveType.LARGE_GIF.SIZE,
+						SaveType.LARGE_GIF.SIZE,
+						2),
+				new MyDisplayer(pApplet),
+				new MyToaster(pApplet),
+				new MyLogger(),
 				new ProcessingGifRecording());
 		this.pApplet = pApplet;
 
@@ -38,7 +47,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 	/**
 	 * Draw text to the PApplet that describes the most recent UI action. The
 	 * text fades away over a set number of frames.
-	 * 
+	 *
 	 * @param pApplet
 	 */
 	private final static class MyToaster extends SpirotechnicManager.ToastCallback {
@@ -55,9 +64,9 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 			pApplet.textAlign(PConstants.CENTER, PConstants.BOTTOM);
 			pApplet.textSize(24);
 			final int alpha = 255 - 3 * framesSinceKeyPress; // TODO: Make these
-																// calculations
-																// more
-																// structured
+			// calculations
+			// more
+			// structured
 			final int x = pApplet.width / 2;
 			final int y = pApplet.height - 30;
 
@@ -111,7 +120,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 
 	/**
 	 * Using this library: https://github.com/01010101/GifAnimation
-	 * 
+	 *
 	 * @author PaulWintz
 	 *
 	 */
