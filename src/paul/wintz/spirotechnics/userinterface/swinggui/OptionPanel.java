@@ -1,24 +1,13 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
+
+import com.sun.istack.internal.NotNull;
 
 import paul.wintz.userinterface.HasValue;
-import paul.wintz.userinterface.optiontypes.BooleanOption;
-import paul.wintz.userinterface.optiontypes.EventOption;
-import paul.wintz.userinterface.optiontypes.FractionOption;
-import paul.wintz.userinterface.optiontypes.ListOption;
-import paul.wintz.userinterface.optiontypes.NumberOption;
-import paul.wintz.userinterface.optiontypes.IntegerRangeOption;
-import paul.wintz.userinterface.optiontypes.UserInputOption;
+import paul.wintz.userinterface.optiontypes.*;
 
 @SuppressWarnings("serial")
 abstract class OptionPanel<T extends UserInputOption> extends JPanel {
@@ -31,13 +20,13 @@ abstract class OptionPanel<T extends UserInputOption> extends JPanel {
 		this.option = option;
 
 		parentPanel.add(this);
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		createLabel();
 		updateLabel();
 		createControl();
 
-		Component spacer = Box.createVerticalStrut(10);
+		final Component spacer = Box.createVerticalStrut(10);
 		this.add(spacer);
 	}
 
@@ -52,33 +41,32 @@ abstract class OptionPanel<T extends UserInputOption> extends JPanel {
 	protected abstract void createControl();
 
 	protected void updateLabel() {
-		StringBuilder sb = new StringBuilder(option.getDescription());
+		final StringBuilder sb = new StringBuilder(option.getDescription());
 		if (option instanceof HasValue<?>) {
 			sb.append(": ").append(((HasValue<?>) option).getValue().toString());
 		}
 		label.setText(sb.toString());
 	}
 
-	public static OptionPanel<?> makeOptionPanel(UserInputOption option, OptionsGroupPanel parent) {
+	public static OptionPanel<?> makeOptionPanel(@NotNull UserInputOption option, @NotNull OptionsGroupPanel parent) {
 		if (option == null)
 			throw new IllegalArgumentException("Option cannot be null");
 		if (parent == null)
 			throw new IllegalArgumentException("Parent panel cannot be null");
 
-		if (option instanceof IntegerRangeOption) {
+		if (option instanceof IntegerRangeOption)
 			return new SliderOptionPanel(parent, (IntegerRangeOption) option);
-		} else if (option instanceof NumberOption) {
+		else if (option instanceof NumberOption)
 			return new NumberOptionPanel(parent, (NumberOption) option);
-		} else if (option instanceof BooleanOption) {
+		else if (option instanceof BooleanOption)
 			return new ToggleOptionPanel(parent, (BooleanOption) option);
-		} else if (option instanceof FractionOption) {
+		else if (option instanceof FractionOption)
 			return new FractionOptionPanel(parent, (FractionOption) option);
-		} else if (option instanceof ListOption<?>) {
+		else if (option instanceof ListOption<?>)
 			return new ListOptionPanel<>(parent, (ListOption<?>) option);
-		} else {
+		else
 			throw new RuntimeException(
 					"Option type not supported: " + option.getClass().getSuperclass().getSimpleName());
-		}
 	}
 
 }

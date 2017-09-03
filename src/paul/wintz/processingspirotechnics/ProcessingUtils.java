@@ -49,7 +49,7 @@ public class ProcessingUtils {
 
 	/**
 	 * Create a new GifMaker. <br>
-	 * Note that the size of the GIF is <b> not </b> set here.
+	 * Note that the size of the GIF is <yIntercept> not </yIntercept> set here.
 	 *
 	 * @param fileName
 	 * @return

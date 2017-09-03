@@ -1,13 +1,10 @@
 package paul.wintz.processingspirotechnics;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import paul.wintz.spirotechnics.InitialValues;
-import paul.wintz.spirotechnics.SpirotechnicManager;
+import paul.wintz.spirotechnics.*;
 import paul.wintz.spirotechnics.spirotechnic.SpirotechnicInformant.ConditionStringPair;
-import processing.core.PApplet;
-import processing.core.PConstants;
+import processing.core.*;
 
 public class SpiroPApplet extends PApplet {
 	private SpirotechnicManager<?> manager;
@@ -24,7 +21,6 @@ public class SpiroPApplet extends PApplet {
 	public void settings() {
 		size(InitialValues.INITIAL_WINDOW_WIDTH, InitialValues.INITIAL_WINDOW_HEIGHT, FX2D);
 		smooth(8);
-
 	}
 
 	@Override

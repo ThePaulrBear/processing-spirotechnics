@@ -4,31 +4,31 @@ import static paul.wintz.spirotechnics.InitialValues.SIDEBAR_WIDTH;
 
 import java.awt.EventQueue;
 import java.io.File;
+import java.util.List;
 
-import paul.wintz.spirotechnics.SpirotechnicManager;
-import paul.wintz.spirotechnics.canvas.SaveType;
+import paul.wintz.canvas.Layer;
+import paul.wintz.spirotechnics.*;
 import paul.wintz.spirotechnics.userinterface.swinggui.OptionsJFrame;
 import paul.wintz.userinterface.HasValue;
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PGraphics;
+import processing.core.*;
 
 public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics> {
 	private final PApplet pApplet;
 
-	public ProcessingSpirotechnicManager(PApplet pApplet) {
+	public ProcessingSpirotechnicManager(final PApplet pApplet) {
 		super(
-				//FIXME: Find a better way to set the canvas size such that it matches the current settings
-				new PGraphicsCanvas(
-						SaveType.LARGE_GIF.SIZE,
-						SaveType.LARGE_GIF.SIZE,
-						2),
+				new PGraphicsLayerFactory(),
 				new MyDisplayer(pApplet),
+				new MyLayerCompositor(),
 				new MyToaster(pApplet),
 				new MyLogger(),
 				new ProcessingGifRecording());
 		this.pApplet = pApplet;
 
+		openOptionsWindow();
+	}
+
+	private void openOptionsWindow() {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -43,6 +43,30 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 	}
 
 	int framesSinceKeyPress = Integer.MAX_VALUE / 2;
+
+	private static final class PGraphicsLayerFactory implements LayerFactory<PGraphics> {
+		@Override
+		public Layer<PGraphics> makeLayer(int width, int height) {
+			return new PGraphicsCanvas(width, width);
+		}
+	}
+
+	private static final class MyLayerCompositor implements LayersCompsitor<PGraphics> {
+
+		final PGraphics base = ProcessingUtils.createPGraphics(1, 1);
+
+		@Override
+		public PGraphics createCompositeImage(List<Layer<PGraphics>> list) {
+
+			base.setSize(list.get(0).getWidth(), list.get(0).getHeight());
+			base.beginDraw();
+			for (final Layer<PGraphics> layer : list) {
+				layer.drawOnto(base);
+			}
+			base.endDraw();
+			return base;
+		}
+	}
 
 	/**
 	 * Draw text to the PApplet that describes the most recent UI action. The
@@ -101,7 +125,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 
 	}
 
-	final static class MyDisplayer implements SpirotechnicManager.DisplayCallback<PGraphics> {
+	final static class MyDisplayer implements SpirotechnicManager.ImageDisplayer<PGraphics> {
 		private final PApplet pApplet;
 
 		public MyDisplayer(PApplet pApplet) {
@@ -110,8 +134,9 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 
 		@Override
 		public void onDisplay(PGraphics image) {
-			final float displayScale = (float) Math.min(pApplet.height, pApplet.width - SIDEBAR_WIDTH)
-					/ (float) image.width;
+			final int shortestEdge = Math.min(pApplet.height, pApplet.width - SIDEBAR_WIDTH);
+			final float displayScale = (float) shortestEdge / (float) image.width;
+
 			pApplet.scale(displayScale, displayScale);
 			pApplet.image(image, SIDEBAR_WIDTH / displayScale, 0);
 			pApplet.scale(1 / displayScale, 1 / displayScale);

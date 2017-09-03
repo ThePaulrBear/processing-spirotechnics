@@ -2,30 +2,19 @@ package paul.wintz.spirotechnics.userinterface.swinggui;
 
 import java.awt.FlowLayout;
 
-import javax.swing.JMenu;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
-import paul.wintz.spirotechnics.modes.ModeList;
-import paul.wintz.userinterface.optiontypes.BooleanOption;
-import paul.wintz.userinterface.optiontypes.EventOption;
-import paul.wintz.userinterface.optiontypes.FractionOption;
-import paul.wintz.userinterface.optiontypes.ListOption;
-import paul.wintz.userinterface.optiontypes.NumberOption;
-import paul.wintz.userinterface.optiontypes.OptionGroup;
-import paul.wintz.userinterface.optiontypes.OptionItem;
-import paul.wintz.userinterface.optiontypes.IntegerRangeOption;
-import paul.wintz.userinterface.optiontypes.UserInputOption;
+import paul.wintz.userinterface.optiontypes.*;
 
 @SuppressWarnings("serial")
 class TabOptionsGroupPanel extends JPanel {
 
 	TabOptionsGroupPanel(JPanel parent, JTabbedPane tabPane, OptionGroup optionList, JMenu eventMenu) {
 
-		this.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		this.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		this.setAlignmentY(TOP_ALIGNMENT);
+		setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+		setAlignmentY(TOP_ALIGNMENT);
 		parent.setAlignmentY(TOP_ALIGNMENT);
 		parent.add(this);
 		tabPane.addTab(optionList.getDescription(), null, this, null);
@@ -34,15 +23,13 @@ class TabOptionsGroupPanel extends JPanel {
 	}
 
 	public void addList(OptionGroup optionList, JMenu eventMenu) {
-		for (OptionItem o : optionList) {
+		for (final OptionItem o : optionList) {
 			add(o, eventMenu);
 		}
 	}
 
 	public void add(OptionItem o, JMenu eventMenu) {
-		if (o instanceof ModeList) {
-			new ModeListPanel(this, (ModeList<?>) o);
-		} else if (o instanceof OptionGroup) {
+		if (o instanceof OptionGroup) {
 			new OptionsGroupPanel(this, (OptionGroup) o, eventMenu);
 		} else if (o instanceof UserInputOption) {
 			addOption((UserInputOption) o, eventMenu);
@@ -75,7 +62,7 @@ class TabOptionsGroupPanel extends JPanel {
 	}
 
 	public void updateListExceptFirst(OptionGroup optionList) {
-		while (this.getComponentCount() > 1) {
+		while (getComponentCount() > 1) {
 			this.remove(1);
 		}
 		addList(optionList, null);

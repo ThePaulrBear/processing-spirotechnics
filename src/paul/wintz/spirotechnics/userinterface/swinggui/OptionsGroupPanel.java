@@ -2,24 +2,24 @@ package paul.wintz.spirotechnics.userinterface.swinggui;
 
 import java.awt.Dimension;
 
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
-import paul.wintz.spirotechnics.modes.ModeList;
-import paul.wintz.userinterface.optiontypes.EventOption;
-import paul.wintz.userinterface.optiontypes.OptionGroup;
-import paul.wintz.userinterface.optiontypes.OptionItem;
-import paul.wintz.userinterface.optiontypes.UserInputOption;
+import paul.wintz.userinterface.optiontypes.*;
+import paul.wintz.userinterface.optiontypes.OptionGroup.OnListChangeListener;
 
 @SuppressWarnings("serial")
 class OptionsGroupPanel extends JPanel {
 	public static final int WIDTH = 400;
 	private final JLabel jLabel;
 
-	OptionsGroupPanel(JPanel parent, OptionGroup optionList, JMenu eventMenu) {
+	private final OptionGroup optionGroup;
+	private final JMenu eventMenu;
+
+	OptionsGroupPanel(JPanel parent, OptionGroup optionGroup, JMenu eventMenu) {
+		this.optionGroup = optionGroup;
+		this.eventMenu = eventMenu;
+
 		setMaximumSize(new Dimension(WIDTH, Integer.MAX_VALUE));
 		setMinimumSize(new Dimension(WIDTH, 0));
 
@@ -29,58 +29,57 @@ class OptionsGroupPanel extends JPanel {
 		setAlignmentY(TOP_ALIGNMENT);
 		parent.setAlignmentY(TOP_ALIGNMENT);
 
-		jLabel = new JLabel(optionList.getDescription());
+		jLabel = new JLabel(optionGroup.getDescription());
 		jLabel.setAlignmentX(CENTER_ALIGNMENT);
+
 		this.add(jLabel);
 		parent.add(this);
 
-		updateList(optionList, 1, eventMenu);
+		updateList(0);
+
+		optionGroup.addListChangeListener(new OnListChangeListener() {
+
+			@Override
+			public void onListChange(int firstIndexChanged) {
+				updateList(firstIndexChanged);
+			}
+
+		});
 	}
 
-	private void addList(OptionGroup optionList, JMenu eventMenu) {
-		for (final OptionItem o : optionList) {
-			add(o, eventMenu);
-		}
-	}
+	public void add(OptionItem o) {
 
-	public void add(OptionItem o, JMenu eventMenu) {
-		if (o instanceof ModeList) {
-			new ModeListPanel(this, (ModeList<?>) o);
-		} else if (o instanceof OptionGroup) {
+		if (o instanceof OptionGroup) {
 			new OptionsGroupPanel(this, (OptionGroup) o, eventMenu);
-		} else if (o instanceof UserInputOption) {
-			addOption((UserInputOption) o, eventMenu);
-		}
-	}
+		} else if (o instanceof EventOption) {
+			new EventMenuItem((EventOption) o, eventMenu);
+		} else if(o instanceof UserInputOption){
+			OptionPanel.makeOptionPanel((UserInputOption) o, this);
+		} else if(o == null)
+			throw new NullPointerException();
+		else
+			throw new ClassCastException("Wrong type: " + this);
 
-	/**
-	 * @param eventMenu
-	 * @param options
-	 */
-	private void addOption(UserInputOption opt, JMenu eventMenu) {
-		if (opt == null)
-			return;
-
-		if (opt instanceof EventOption) {
-			new EventMenuItem((EventOption) opt, eventMenu);
-		} else {
-			OptionPanel.makeOptionPanel(opt, this);
-		}
 	}
 
 	/**
 	 *
-	 * @param optionList
+	 * @param firstIndexChanged TODO
 	 * @param afterNdx
 	 *            the first item to delete/replace
-	 * @param eventMenu
 	 */
-	public void updateList(OptionGroup optionList, int afterNdx, JMenu eventMenu) {
-		while (getComponentCount() > afterNdx) {
-			this.remove(afterNdx);
+	private void updateList(int firstIndexChanged) {
+
+		int lastIndex = getComponentCount() - 1;
+		while (lastIndex >= firstIndexChanged) {
+			remove(lastIndex);
+			lastIndex = getComponentCount() - 1;
+		}
+		for (int i = firstIndexChanged; i < optionGroup.size(); i++) {
+			add(optionGroup.get(i));
 		}
 
-		addList(optionList, eventMenu);
 
 	}
+
 }

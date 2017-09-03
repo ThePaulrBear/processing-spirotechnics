@@ -1,11 +1,8 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
+import javax.swing.*;
 
 import paul.wintz.userinterface.optiontypes.ListOption;
 
@@ -16,28 +13,30 @@ public class ListOptionPanel<T> extends OptionPanel<ListOption<T>> {
 		super(parentPanel, listOption);
 	}
 
-	class ItemSelectionButton extends JToggleButton {
-		public ItemSelectionButton(final T item) {
-			setText(item.toString());
-			addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (isSelected())
-						option.setSelected(item);
-				}
-			});
-		}
-	}
-
 	@Override
 	protected void createControl() {
-		JPanel radioPanel = new JPanel(new GridLayout(0, 1));
-		for (final T item : option) {
-			final JToggleButton butt = new ItemSelectionButton(item);
 
-			radioPanel.add(butt);
+		final ListOptionComboBox comboBox = new ListOptionComboBox(option);
+
+		this.add(comboBox);
+
+	}
+
+	private class ListOptionComboBox extends JComboBox<T> {
+
+		public ListOptionComboBox(final ListOption<T> listOption) {
+			for (final T mode : listOption) {
+				addItem(mode);
+			}
+
+			addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					listOption.setSelected((T) getSelectedItem());
+				}
+			});
+
+			setSelectedItem(option.getSelected());
 		}
-		this.add(radioPanel);
 	}
 }

@@ -1,82 +1,69 @@
 package paul.wintz.processingspirotechnics;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
-import paul.wintz.canvas.Canvas;
-import paul.wintz.canvas.Painter;
+import paul.wintz.canvas.*;
 import paul.wintz.utils.Vector;
-import processing.core.PConstants;
-import processing.core.PGraphics;
+import processing.core.*;
 
-public class PGraphicsCanvas implements Canvas<PGraphics> {
+public class PGraphicsCanvas implements Layer<PGraphics> {
 
-	private final ArrayList<PGraphics> layers;
+	private final PGraphics layer;
 	private int width, height;
 	private float scale, rotation, centerX, centerY;
 
-	private final PGraphics compositeImage;
-
-	public PGraphicsCanvas(int width, int height, int numLayers) {
-		if (numLayers < 1)
-			throw new IllegalArgumentException("There must be at least one layer");
+	public PGraphicsCanvas(int width, int height) {
 		this.width = width;
 		this.height = height;
-		layers = new ArrayList<>(numLayers);
-		for (int i = 0; i < numLayers; i++) {
-			layers.add(createLayer());
-		}
-		compositeImage = createLayer();
+		layer = createLayer();
+		layer.beginDraw();
 	}
 
 	/**
 	 * Draw a line from (x0,y0) to (x1,y1)
 	 *
 	 * @throws IllegalArgumentException
-	 *             if the stroke is less than zero, or the layer does not exist.
+	 *             if the stroke is less than zero, or the layers does not exist.
 	 */
 	@Override
 	public void line(float x0, float y0, float x1, float y1, Painter painter) throws IllegalArgumentException {
-		final PGraphics layer = bindPainter(painter);
+		bindPainter(painter);
 		layer.line(x0, y0, x1, y1);
 	}
 
 	@Override
-	public void ellipse(float xCenter, float yCenter, float width, float height, Painter painter,
-			Queue<Transformation<PGraphics>> transforms) {
-		final PGraphics layer = bindPainter(painter);
-		if (transforms != null) {
-			pushTransformations(layer, transforms);
+	public void ellipse(float xCenter, float yCenter, float width, float height, Painter painter, Queue<Transformation<PGraphics>> transientTransforms) {
+		bindPainter(painter);
+		if (transientTransforms != null) {
+			pushTransientTransformations(layer, transientTransforms);
 		}
 		{
 			layer.ellipseMode(PConstants.CENTER);
 			layer.ellipse(xCenter, yCenter, width, height);
 		}
-		if (transforms != null) {
-			popTransformations(layer);
+		if (transientTransforms != null) {
+			popTransientTransformations(layer);
 		}
 	}
 
 	@Override
 	public void arc(float xCenter, float yCenter, float width, float height, float startAngle, float endAngle,
 			Painter painter) {
-		final PGraphics layer = bindPainter(painter);
+		bindPainter(painter);
 		layer.arc(xCenter, yCenter, width, height, startAngle, endAngle);
 	}
 
 	@Override
 	public void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, Painter painter) {
-		final PGraphics layer = bindPainter(painter);
+		bindPainter(painter);
 		layer.quad(x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
 	@Override
-	public void drawPath(List<Vector> points, Painter painter, Queue<Transformation<PGraphics>> transforms) {
-		final PGraphics layer = bindPainter(painter);
-		if (transforms != null) {
-			pushTransformations(layer, transforms);
+	public void drawPath(List<Vector> points, Painter painter, Queue<Transformation<PGraphics>> transientTransforms) {
+		bindPainter(painter);
+		if (transientTransforms != null) {
+			pushTransientTransformations(layer, transientTransforms);
 		}
 		{
 			layer.beginShape();
@@ -85,16 +72,16 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 			}
 			layer.endShape();
 		}
-		if (transforms != null) {
-			popTransformations(layer);
+		if (transientTransforms != null) {
+			popTransientTransformations(layer);
 		}
 	}
 
 	@Override
-	public void drawPolygon(List<Vector> points, Painter painter, Queue<Transformation<PGraphics>> transforms) {
-		final PGraphics layer = bindPainter(painter);
-		if (transforms != null) {
-			pushTransformations(layer, transforms);
+	public void drawPolygon(List<Vector> points, Painter painter, Queue<Transformation<PGraphics>> transientTransforms) {
+		bindPainter(painter);
+		if (transientTransforms != null) {
+			pushTransientTransformations(layer, transientTransforms);
 		}
 		{
 			layer.beginShape();
@@ -105,27 +92,84 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 			}
 			layer.endShape();
 		}
-		if (transforms != null) {
-			popTransformations(layer);
+		if (transientTransforms != null) {
+			popTransientTransformations(layer);
 		}
 	}
 
-	@Override
-	public void clearAll() {
-		for (final PGraphics layer : layers) {
-			layer.clear();
-		}
+
+	/**
+	 * Draw a dot at the given coordinates. This is different from a circle in
+	 * that the size of the circle does not scale, so it is always the portion
+	 * of the layers.
+	 *
+	 * @param x
+	 * @param y
+	 * @param transforms
+	 * @param color
+	 * @param size
+	 * @param layers
+	 */
+	public void dot(float x, float y, float radius, Painter painter, Queue<Transformation<PGraphics>> transforms) {
+		ellipse(x, y, radius / scale, radius / scale, painter, transforms);
+	}
+
+	public void dot(Vector v, float radius, Painter painter, Queue<Transformation<PGraphics>> transforms) {
+		dot((float) v.x(), (float) v.y(), radius, painter, transforms);
 	}
 
 	@Override
-	public void clearLayer(Painter painter) {
-		layers.get(painter.layer).clear();
+	public void endpointToEndpoint(Vector start, Vector end, Painter painter) {
+		line((float) start.x(), (float) start.y(), (float) end.x(), (float) end.y(), painter);
+	}
+
+	public void vector(Vector startPos, Vector vector, Painter painter) {
+		vector(startPos, vector, 1.0, painter);
+	}
+
+	public void vector(Vector startPos, Vector vector, double scale, Painter painter) {
+		line((float) startPos.x(), (float) startPos.y(), (float) (startPos.x() + scale * vector.x()),
+				(float) (startPos.y() + scale * vector.y()), painter);
+	}
+
+	/**
+	 * Draw an empty circle.
+	 *
+	 * @param x
+	 *            x-coordinate of center of circle
+	 * @param y
+	 *            y-coordinate of center of circle
+	 * @param radius
+	 * @param strokeWeight
+	 * @param color
+	 * @param layers
+	 */
+	@Override
+	public void circle(float x, float y, float radius, Painter painter) {
+		ellipse(x, y, (2 * radius), (2 * radius), painter, null);
+	}
+
+	@Override
+	public void quad(Vector v1, Vector v2, Vector v3, Vector v4, Painter painter) {
+		quad((float) v1.x(), (float) v1.y(), (float) v2.x(), (float) v2.y(), (float) v3.x(), (float) v3.y(),
+				(float) v4.x(), (float) v4.y(), painter);
+	}
+
+	public void drawPath(List<Vector> points, Painter painter) {
+		drawPath(points, painter, null);
+	}
+
+
+
+	@Override
+	public void clear() {
+		layer.clear();
 	}
 
 	@Override
 	public void background(Painter painter) {
 		final int fill = painter.getFill();
-		layers.get(painter.layer).background(fill);
+		layer.background(fill);
 	}
 
 	@Override
@@ -133,12 +177,8 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 		this.width = width;
 		this.height = height;
 
-		for (final PGraphics layer : layers) {
-			layer.setSize(width, height);
-			layer.beginDraw();
-		}
-		compositeImage.setSize(width, height);
-		compositeImage.beginDraw();
+		layer.setSize(width, height);
+		layer.beginDraw();
 	}
 
 	protected final PGraphics createLayer() {
@@ -147,25 +187,12 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 
 	@Override
 	public PGraphics getImage() {
-		compositeImage.beginDraw();
-		compositeImage.clear();
-
-		for (final PGraphics layer : layers) {
-			layer.endDraw();
-			compositeImage.image(layer, 0, 0);
-			layer.beginDraw();
-		}
-		compositeImage.endDraw();
-		return compositeImage;
+		layer.endDraw();
+		return layer;
 	}
 
-	private PGraphics bindPainter(Painter painter) {
-		if (painter.getStrokeWeight() < 0)
-			throw new IllegalArgumentException("Stroke was less than zero!");
-		if (painter.layer < 0 || painter.layer >= layers.size())
-			throw new IllegalArgumentException("Layer #" + painter.layer + " does not exist.");
+	private void bindPainter(Painter painter) {
 
-		final PGraphics layer = layers.get(painter.layer);
 		if (painter.isFilled()) {
 			layer.fill(painter.getFill());
 		} else {
@@ -178,7 +205,7 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 		} else {
 			layer.noStroke();
 		}
-		return layer;
+
 	}
 
 	@Override
@@ -189,31 +216,26 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 	}
 
 	private void translate(double x, double y) {
-		for (final PGraphics layer : layers) {
-			layer.translate((float) x, (float) y);
-		}
+
+		layer.translate((float) x, (float) y);
+
 	}
 
 	private void rotate(double angle) {
-		for (final PGraphics layer : layers) {
-			layer.rotate((float) angle);
-		}
+
+		layer.rotate((float) angle);
+
 	}
 
 	private void scale(double scale) {
-		for (final PGraphics layer : layers) {
-			layer.scale((float) scale);
-		}
+
+		layer.scale((float) scale);
+
 	}
 
 	@Override
 	public void setScale(float scale) {
 		this.scale = scale;
-	}
-
-	@Override
-	public double getScale() {
-		return scale;
 	}
 
 	@Override
@@ -238,37 +260,27 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 	}
 
 	@Override
-	public int getLayersCount() {
-		return layers.size();
-	}
-
-	@Override
-	public void saveImage(File f) {
-		getImage().save(f.getAbsolutePath());
-	}
-
-	@Override
 	public String toString() {
-		return String.format("%d x %d canvas (%d layers)", getWidth(), getHeight(), getLayersCount());
+		return String.format("Layer (%d x %d) ", getWidth(), getHeight());
 	}
 
-	private int pushedTransformationsCount = 0;
+	private int pushedTransientTransformationsCount = 0;
 
 	/**
 	 * Sets short-term transformations.
 	 *
-	 * @param layer
-	 * @param transforms
+	 * @param layers
+	 * @param transientTransforms
 	 */
-	private void pushTransformations(PGraphics layer, Queue<Transformation<PGraphics>> transforms) {
-		if (transforms == null)
+	private void pushTransientTransformations(PGraphics layer, Queue<Transformation<PGraphics>> transientTransforms) {
+		if (transientTransforms == null)
 			throw new IllegalArgumentException("transforms w null");
-		if (pushedTransformationsCount != 0)
+		if (pushedTransientTransformationsCount != 0)
 			throw new IllegalStateException(
-					"There must be no pushed transformations, but instead there were " + pushedTransformationsCount);
-		pushedTransformationsCount++;
+					"There must be no pushed transformations, but instead there were " + pushedTransientTransformationsCount);
+		pushedTransientTransformationsCount++;
 		layer.pushMatrix();
-		for (final Transformation<PGraphics> t : transforms) {
+		for (final Transformation<PGraphics> t : transientTransforms) {
 			t.apply(layer);
 		}
 	}
@@ -276,32 +288,32 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 	/**
 	 * Unsets the short-term transformations.
 	 *
-	 * @param layer
+	 * @param layers
 	 */
-	private void popTransformations(PGraphics layer) {
-		if (pushedTransformationsCount != 1)
+	private void popTransientTransformations(PGraphics layer) {
+		if (pushedTransientTransformationsCount != 1)
 			throw new IllegalStateException(
-					"There must be one pushed transformations, but instead there were " + pushedTransformationsCount);
-		pushedTransformationsCount--;
+					"There must be one pushed transformations, but instead there were " + pushedTransientTransformationsCount);
+		pushedTransientTransformationsCount--;
 		layer.popMatrix();
 	}
 
 	@Override
-	public Canvas.Transformation<PGraphics> getRotationTransformation(float angle) {
+	public Transformation<PGraphics> getRotationTransformation(float angle) {
 		return new PGraphicsRotation(angle);
 	}
 
 	@Override
-	public Canvas.Transformation<PGraphics> getTranslationTransformation(float xShift, float yShift) {
+	public Transformation<PGraphics> getTranslationTransformation(float xShift, float yShift) {
 		return new PGraphicsTranslation(xShift, yShift);
 	}
 
 	@Override
-	public Canvas.Transformation<PGraphics> getScaleTransformation(float xScale, float yScale) {
+	public Transformation<PGraphics> getScaleTransformation(float xScale, float yScale) {
 		return new PGraphicsScale(xScale, yScale);
 	}
 
-	public static final class PGraphicsRotation extends Transformation<PGraphics> {
+	public static final class PGraphicsRotation implements Transformation<PGraphics> {
 		private final float angle;
 
 		public PGraphicsRotation(float angle) {
@@ -314,7 +326,7 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 		}
 	}
 
-	public static final class PGraphicsTranslation extends Transformation<PGraphics> {
+	public static final class PGraphicsTranslation implements Transformation<PGraphics> {
 		private final float xShift;
 		private final float yShift;
 
@@ -329,7 +341,7 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 		}
 	}
 
-	public static final class PGraphicsScale extends Transformation<PGraphics> {
+	public static final class PGraphicsScale implements Transformation<PGraphics> {
 		private final float xScale;
 		private final float yScale;
 
@@ -343,4 +355,32 @@ public class PGraphicsCanvas implements Canvas<PGraphics> {
 			layer.scale(xScale, yScale);
 		}
 	}
+
+	@Override
+	public void drawOnto(PGraphics target) {
+
+		if(target.width != layer.width || target.height != layer.height)
+			throw new RuntimeException("Dimensions must match");
+
+		layer.endDraw();
+		target.image(layer, 0, 0);
+		layer.beginDraw();
+
+	}
+
+	@Override
+	public void dot(float x, float y, float radius, Painter painter) {
+		dot(x, y, radius, painter, null);
+	}
+
+	@Override
+	public void dot(Vector pos, float radius, Painter painter) {
+		dot((float) pos.x(), (float) pos.y(), radius, painter);
+	}
+
+	@Override
+	public double getScale() {
+		return scale;
+	}
+
 }

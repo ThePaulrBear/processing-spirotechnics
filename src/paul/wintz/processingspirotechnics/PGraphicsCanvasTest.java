@@ -1,24 +1,24 @@
 package paul.wintz.processingspirotechnics;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.util.Random;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+
+import static org.junit.Assert.assertEquals;
 
 import paul.wintz.canvas.Painter;
-import processing.core.PApplet;
-import processing.core.PGraphics;
+import processing.core.*;
 
 public class PGraphicsCanvasTest {
 
+	private static TestPApplet testPApplet;
+
 	private PGraphicsCanvas canvas;
 	private final Random random = new Random();
+	private final Painter painter = new Painter();
 
 	private static final class TestPApplet extends PApplet {
+
 		@Override
 		public void settings() {
 			size(4, 4);
@@ -30,7 +30,8 @@ public class PGraphicsCanvasTest {
 		}
 
 		public final static void run(){
-			PApplet.runSketch(new String[] { "TestPApplet" }, new TestPApplet());
+			testPApplet = new TestPApplet();
+			PApplet.runSketch(new String[] { "TestPApplet" }, testPApplet);
 
 			while(!ProcessingUtils.isInititialized()){
 				//wait for the testPapplet to initialize
@@ -44,30 +45,22 @@ public class PGraphicsCanvasTest {
 			TestPApplet.run();
 		}
 
-		canvas = new PGraphicsCanvas(40, 50, 3);
+		canvas = new PGraphicsCanvas(40, 50);
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		testPApplet.exit();
 	}
 
 	@Test
 	public final void testPGraphicsCanvas() {
 		final int width = 40;
 		final int height = 50;
-		final int layerCount = 4;
-		final PGraphicsCanvas newCanvas = new PGraphicsCanvas(width, height, layerCount);
-		newCanvas.clearAll();
+		final PGraphicsCanvas newCanvas = new PGraphicsCanvas(width, height);
+		newCanvas.clear();
 		assertEquals(width, newCanvas.getWidth());
 		assertEquals(height, newCanvas.getHeight());
-		assertEquals(layerCount, newCanvas.getLayersCount());
-
-		try{
-			new PGraphicsCanvas(width, height, 0);
-			fail("An exception should have been thrown when there were zero layers in the constructor of PGraphicsCanvas");
-		} catch (final Exception e){
-			assertIllegalArgumentException(e);
-		}
 	}
 
 	private static void assertIllegalArgumentException(final Exception e) {
@@ -76,26 +69,16 @@ public class PGraphicsCanvasTest {
 
 
 	@Test
-	public final void testClearAll() {
-		canvas.clearAll();
-		canvas.clearAll();
-	}
-
-	@Test
-	public final void testClearLayer() {
-		for(int i = 0; i < canvas.getLayersCount(); i++){
-			final Painter painter = new Painter(i);
-			canvas.clearLayer(painter);
-		}
+	public final void testClear() {
+		canvas.clear();
 	}
 
 	@Test
 	public final void testBackground() {
 		for(int i = 0; i < 10; i++){
-			final Painter backgroundPainter = randomLayerPainter();
-			backgroundPainter.setFill(random.nextInt());
-			canvas.background(backgroundPainter);
-			//			final PGraphics image = canvas.getImage();
+			painter.setFill(random.nextInt());
+			canvas.background(painter);
+			//			final PGraphics image = layeredCanvas.getImage();
 			//			image.loadPixels();
 			//
 			//			assertEquals("Failed on " + i + "th pass", backgroundPainter.getFill(), image.pixels[0]);
@@ -147,7 +130,7 @@ public class PGraphicsCanvasTest {
 		for(int i = 1; i < 12; i++){
 			final int width = 1 + random.nextInt(40);
 			final int height = 1 + random.nextInt(40);
-			new PGraphicsCanvas(width, height, i).getImage();
+			new PGraphicsCanvas(width, height).getImage();
 		}
 	}
 
@@ -159,7 +142,7 @@ public class PGraphicsCanvasTest {
 			final float x1 = random.nextFloat();
 			final float y1 = random.nextFloat();
 
-			canvas.line(x0, y0, x1, y1, randomLayerPainter());
+			canvas.line(x0, y0, x1, y1, painter);
 		}
 	}
 
@@ -171,7 +154,7 @@ public class PGraphicsCanvasTest {
 			final float x1 = random.nextFloat();
 			final float y1 = random.nextFloat();
 
-			canvas.ellipse(x0, y0, x1, y1, randomLayerPainter(), null);
+			canvas.ellipse(x0, y0, x1, y1, painter, null);
 		}
 	}
 
@@ -186,7 +169,7 @@ public class PGraphicsCanvasTest {
 			final float start = random.nextFloat();
 			final float end = random.nextFloat();
 
-			canvas.arc(x0, y0, x1, y1, start, end, randomLayerPainter());
+			canvas.arc(x0, y0, x1, y1, start, end, painter);
 		}
 	}
 
@@ -203,18 +186,18 @@ public class PGraphicsCanvasTest {
 			final float x4 = random.nextFloat();
 			final float y4 = random.nextFloat();
 
-			canvas.quad(x1, y1, x2, y2, x3, y3, x4, y4, randomLayerPainter());
+			canvas.quad(x1, y1, x2, y2, x3, y3, x4, y4, painter);
 		}
 	}
 
 	//	@Test
 	//	public final void testDrawPath() {
-	//		fail("Not yet implemented"); // TODO
+	//		fail("Not yet implemented"); // TODO implement test case
 	//	}
 	//
 	//	@Test
 	//	public final void testDrawPolygon() {
-	//		fail("Not yet implemented"); // TODO
+	//		fail("Not yet implemented"); // TODO implement test case
 	//	}
 
 	@Test
@@ -224,22 +207,22 @@ public class PGraphicsCanvasTest {
 
 	//	@Test
 	//	public final void testSaveImage() {
-	//		fail("Not yet implemented"); // TODO
+	//		fail("Not yet implemented"); // TODO implement test case
 	//	}
 	//
 	//	@Test
 	//	public final void testGetRotationTransformation() {
-	//		fail("Not yet implemented"); // TODO
+	//		fail("Not yet implemented"); // TODO implement test case
 	//	}
 	//
 	//	@Test
 	//	public final void testGetTranslationTransformation() {
-	//		fail("Not yet implemented"); // TODO
+	//		fail("Not yet implemented"); // TODO implement test case
 	//	}
 	//
 	//	@Test
 	//	public final void testGetScaleTransformation() {
-	//		fail("Not yet implemented"); // TODO
+	//		fail("Not yet implemented"); // TODO implement test case
 	//	}
 
 	private static void assertSize(int expectedWidth, int expectedHeight, PGraphicsCanvas canvas){
@@ -252,7 +235,4 @@ public class PGraphicsCanvasTest {
 		assertEquals(expectedHeight, image.height);
 	}
 
-	private Painter randomLayerPainter() {
-		return new Painter(random.nextInt(canvas.getLayersCount()));
-	}
 }
