@@ -3,6 +3,7 @@ package paul.wintz.processingspirotechnics;
 import static paul.wintz.spirotechnics.InitialValues.SIDEBAR_WIDTH;
 
 import java.awt.EventQueue;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import processing.core.*;
 
 public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics> {
 	private final PApplet pApplet;
+	OptionsJFrame frame;
 
 	public ProcessingSpirotechnicManager(final PApplet pApplet) {
 		super(
@@ -33,13 +35,25 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 			@Override
 			public void run() {
 				try {
-					final OptionsJFrame frame = new OptionsJFrame(getUserInterface().getOptionsTree());
+					frame = new OptionsJFrame(getUserInterface().getOptionsTree());
 					frame.setVisible(true);
+					frame.addWindowListener(new java.awt.event.WindowAdapter() {
+						@Override
+						public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+							pApplet.exit();
+						}
+					});
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+
+	@Override
+	public void close() {
+		super.close();
+		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 	}
 
 	int framesSinceKeyPress = Integer.MAX_VALUE / 2;
@@ -196,6 +210,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 		public void close() throws IllegalStateException {
 			if (!isOpen)
 				throw new IllegalStateException("The GIF is not open");
+
 			isOpen = false;
 
 			gifMaker.finish();
@@ -212,4 +227,6 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 			this.fpsOption = fpsOption;
 		}
 	}
+
+
 }
