@@ -1,22 +1,22 @@
 package paul.wintz.processingspirotechnics;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import gifAnimation.GifMaker;
+import paul.wintz.logging.Lg;
 import paul.wintz.spirotechnics.canvas.SaveType;
-import processing.core.PApplet;
-import processing.core.PGraphics;
+import processing.core.*;
 
-public class ProcessingUtils {
+public final class ProcessingUtils {
 
+	private static final String TAG = Lg.makeTAG(ProcessingUtils.class);
 	private static PApplet papplet;
-	// DESKTOP INTERACTIONS (OPEN/CLOSE FILES)
-	public final static Desktop DESKTOP = Desktop.getDesktop();
+	public static Desktop DESKTOP = Desktop.getDesktop();
 
-	@SuppressWarnings("static-access")
-	public ProcessingUtils(PApplet pApplet) {
+	public static void initialize(PApplet pApplet) {
 		ProcessingUtils.papplet = pApplet;
 	}
 
@@ -30,14 +30,14 @@ public class ProcessingUtils {
 	 * @param endRange
 	 * @return
 	 */
-	@SuppressWarnings("static-access")
 	public static float map(double value, float startDomain, float stopDomain, float startRange, float stopRange) {
-		return papplet.map((float) value, startDomain, stopDomain, startRange, stopRange);
+		return PApplet.map((float) value, startDomain, stopDomain, startRange, stopRange);
 	}
 
-	public static PGraphics createPGraphics(int width, int height) throws IllegalArgumentException {
-		if (width < 1 || height < 1)
-			throw new IllegalArgumentException("Size must be at least 1x1!");
+	public static PGraphics createPGraphics(int width, int height) {
+		checkArgument(width  > 0, "Width must be positive");
+		checkArgument(height > 0, "Height must be positive");
+
 		final PGraphics graphic = papplet.createGraphics(width, height);
 		graphic.beginDraw();
 		return graphic;
@@ -64,12 +64,13 @@ public class ProcessingUtils {
 		try {
 			ProcessingUtils.DESKTOP.open(SaveType.getBaseFolder());
 		} catch (final IOException e) {
-			e.printStackTrace();
+			Lg.e(TAG, "Failed to open folder", e);
 		}
 	}
 
 	public static boolean isInititialized() {
-		return !(papplet == null);
+		return papplet != null;
 	}
 
+	private ProcessingUtils() {}
 }
