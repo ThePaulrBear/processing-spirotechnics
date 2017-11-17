@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
 import paul.wintz.userinterface.optiontypes.*;
-import paul.wintz.userinterface.optiontypes.OptionGroup.OnListChangeListener;
 
 @SuppressWarnings("serial")
 class OptionsGroupPanel extends JPanel {
@@ -14,11 +13,9 @@ class OptionsGroupPanel extends JPanel {
 	private final JLabel jLabel;
 
 	private final OptionGroup optionGroup;
-	private final JMenu eventMenu;
 
-	OptionsGroupPanel(JPanel parent, OptionGroup optionGroup, JMenu eventMenu) {
+	OptionsGroupPanel(JPanel parent, OptionGroup optionGroup) {
 		this.optionGroup = optionGroup;
-		this.eventMenu = eventMenu;
 
 		setMaximumSize(new Dimension(WIDTH, Integer.MAX_VALUE));
 		setMinimumSize(new Dimension(WIDTH, 0));
@@ -35,24 +32,15 @@ class OptionsGroupPanel extends JPanel {
 		this.add(jLabel);
 		parent.add(this);
 
-		updateList(0);
+		refreshList();
 
-		optionGroup.addListChangeListener(new OnListChangeListener() {
-
-			@Override
-			public void onListChange(int firstIndexChanged) {
-				updateList(firstIndexChanged);
-			}
-
-		});
+		optionGroup.addListChangeListener(() -> refreshList());
 	}
 
 	public void add(OptionItem o) {
 
 		if (o instanceof OptionGroup) {
-			new OptionsGroupPanel(this, (OptionGroup) o, eventMenu);
-		} else if (o instanceof EventOption) {
-			new EventMenuItem((EventOption) o, eventMenu);
+			new OptionsGroupPanel(this, (OptionGroup) o);
 		} else if(o instanceof UserInputOption){
 			OptionPanel.makeOptionPanel((UserInputOption) o, this);
 		} else if(o == null)
@@ -64,22 +52,17 @@ class OptionsGroupPanel extends JPanel {
 
 	/**
 	 *
-	 * @param firstIndexChanged TODO
 	 * @param afterNdx
 	 *            the first item to delete/replace
 	 */
-	private void updateList(int firstIndexChanged) {
+	private void refreshList() {
 
-		int lastIndex = getComponentCount() - 1;
-		while (lastIndex >= firstIndexChanged) {
-			remove(lastIndex);
-			lastIndex = getComponentCount() - 1;
-		}
-		for (int i = firstIndexChanged; i < optionGroup.size(); i++) {
-			add(optionGroup.get(i));
+		removeAll();
+		for (final OptionItem option : optionGroup) {
+			add(option);
 		}
 
-
+		revalidate();
 	}
 
 }

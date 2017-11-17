@@ -1,16 +1,22 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static paul.wintz.logging.Lg.makeTAG;
+
 import java.awt.FlowLayout;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
+import paul.wintz.logging.Lg;
 import paul.wintz.userinterface.optiontypes.*;
 
 @SuppressWarnings("serial")
 class TabOptionsGroupPanel extends JPanel {
+	private static final String TAG = makeTAG(TabOptionsGroupPanel.class);
 
-	TabOptionsGroupPanel(JPanel parent, JTabbedPane tabPane, OptionGroup optionList, JMenu eventMenu) {
+	public TabOptionsGroupPanel(JPanel parent, JTabbedPane tabPane, OptionGroup optionList) {
 
 		setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
@@ -19,37 +25,32 @@ class TabOptionsGroupPanel extends JPanel {
 		parent.add(this);
 		tabPane.addTab(optionList.getDescription(), null, this, null);
 
-		addList(optionList, eventMenu);
+		addList(optionList);
 	}
 
-	public void addList(OptionGroup optionList, JMenu eventMenu) {
-		for (final OptionItem o : optionList) {
-			add(o, eventMenu);
+	public void addList(final OptionGroup optionList) {
+		for (final OptionItem option : optionList) {
+			add(option);
 		}
 	}
 
-	public void add(OptionItem o, JMenu eventMenu) {
+	public void add(OptionItem o) {
 		if (o instanceof OptionGroup) {
-			new OptionsGroupPanel(this, (OptionGroup) o, eventMenu);
+			new OptionsGroupPanel(this, (OptionGroup) o);
 		} else if (o instanceof UserInputOption) {
-			addOption((UserInputOption) o, eventMenu);
+			addOption((UserInputOption) o);
 		}
 	}
 
-	/**
-	 * @param eventMenu
-	 * @param options
-	 */
-	private void addOption(UserInputOption opt, JMenu eventMenu) {
-		if (opt == null)
-			return;
+	private void addOption(@Nonnull UserInputOption opt) {
+		checkNotNull(opt);
 
 		if (opt instanceof IntegerRangeOption) {
 			new SliderOptionPanel(this, (IntegerRangeOption) opt);
 		} else if (opt instanceof NumberOption) {
 			new NumberOptionPanel(this, (NumberOption) opt);
 		} else if (opt instanceof EventOption) {
-			new EventMenuItem((EventOption) opt, eventMenu);
+			new EventButtonPanel(this, (EventOption) opt);
 		} else if (opt instanceof BooleanOption) {
 			new ToggleOptionPanel(this, (BooleanOption) opt);
 		} else if (opt instanceof FractionOption) {
@@ -57,7 +58,7 @@ class TabOptionsGroupPanel extends JPanel {
 		} else if (opt instanceof ListOption<?>) {
 			new ListOptionPanel<>(this, (ListOption<?>) opt);
 		} else {
-			System.err.println("Option not supported by GUI: " + opt.getClass().getSimpleName());
+			Lg.e(TAG, "Option not supported by GUI: " + opt.getClass().getSimpleName());
 		}
 	}
 
@@ -65,6 +66,6 @@ class TabOptionsGroupPanel extends JPanel {
 		while (getComponentCount() > 1) {
 			this.remove(1);
 		}
-		addList(optionList, null);
+		addList(optionList);
 	}
 }

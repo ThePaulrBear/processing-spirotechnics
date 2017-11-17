@@ -1,10 +1,10 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.awt.*;
 
 import javax.swing.*;
-
-import com.sun.istack.internal.NotNull;
 
 import paul.wintz.userinterface.HasValue;
 import paul.wintz.userinterface.optiontypes.*;
@@ -48,11 +48,9 @@ abstract class OptionPanel<T extends UserInputOption> extends JPanel {
 		label.setText(sb.toString());
 	}
 
-	public static OptionPanel<?> makeOptionPanel(@NotNull UserInputOption option, @NotNull OptionsGroupPanel parent) {
-		if (option == null)
-			throw new IllegalArgumentException("Option cannot be null");
-		if (parent == null)
-			throw new IllegalArgumentException("Parent panel cannot be null");
+	public static OptionPanel<?> makeOptionPanel(UserInputOption option, OptionsGroupPanel parent) {
+		checkNotNull(option, "Option was null");
+		checkNotNull(parent, "Parent panel was null");
 
 		if (option instanceof IntegerRangeOption)
 			return new SliderOptionPanel(parent, (IntegerRangeOption) option);
@@ -62,11 +60,12 @@ abstract class OptionPanel<T extends UserInputOption> extends JPanel {
 			return new ToggleOptionPanel(parent, (BooleanOption) option);
 		else if (option instanceof FractionOption)
 			return new FractionOptionPanel(parent, (FractionOption) option);
+		else if (option instanceof EventOption)
+			return new EventButtonPanel(parent, (EventOption) option);
 		else if (option instanceof ListOption<?>)
 			return new ListOptionPanel<>(parent, (ListOption<?>) option);
-		else
-			throw new RuntimeException(
-					"Option type not supported: " + option.getClass().getSuperclass().getSimpleName());
+
+		throw new RuntimeException("Option type not supported: " + option.getClass().getSuperclass());
 	}
 
 }
