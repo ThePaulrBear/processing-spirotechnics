@@ -1,9 +1,11 @@
 package paul.wintz.processingspirotechnics;
 
+import static com.google.common.base.Preconditions.*;
+
 import java.util.*;
 
 import paul.wintz.canvas.*;
-import paul.wintz.utils.Vector;
+import paul.wintz.utils.Vector2D;
 import processing.core.*;
 
 public class PGraphicsCanvas implements Layer<PGraphics> {
@@ -11,6 +13,8 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	private final PGraphics layer;
 	private int width, height;
 	private float scale, rotation, centerX, centerY;
+
+	private final Object lock = new Object();
 
 	public PGraphicsCanvas(int width, int height) {
 		this.width = width;
@@ -21,18 +25,15 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 
 	/**
 	 * Draw a line from (x0,y0) to (x1,y1)
-	 *
-	 * @throws IllegalArgumentException
-	 *             if the stroke is less than zero, or the layers does not exist.
 	 */
 	@Override
-	public void line(float x0, float y0, float x1, float y1, Painter painter) throws IllegalArgumentException {
+	public void line(float x0, float y0, float x1, float y1, Painter painter) {
 		bindPainter(painter);
 		layer.line(x0, y0, x1, y1);
 	}
 
 	@Override
-	public void ellipse(float xCenter, float yCenter, float width, float height, Painter painter, Queue<Transformation<PGraphics>> transientTransforms) {
+	public void ellipse(float xCenter, float yCenter, float width, float height, Painter painter, Queue<Transformation> transientTransforms) {
 		bindPainter(painter);
 		if (transientTransforms != null) {
 			pushTransientTransformations(layer, transientTransforms);
@@ -47,8 +48,7 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	}
 
 	@Override
-	public void arc(float xCenter, float yCenter, float width, float height, float startAngle, float endAngle,
-			Painter painter) {
+	public void arc(float xCenter, float yCenter, float width, float height, float startAngle, float endAngle, Painter painter) {
 		bindPainter(painter);
 		layer.arc(xCenter, yCenter, width, height, startAngle, endAngle);
 	}
@@ -60,14 +60,14 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	}
 
 	@Override
-	public void drawPath(List<Vector> points, Painter painter, Queue<Transformation<PGraphics>> transientTransforms) {
+	public void drawPath(List<Vector2D> points, Painter painter, Queue<Transformation> transientTransforms) {
 		bindPainter(painter);
 		if (transientTransforms != null) {
 			pushTransientTransformations(layer, transientTransforms);
 		}
 		{
 			layer.beginShape();
-			for (final Vector pnt : points) {
+			for (final Vector2D pnt : points) {
 				layer.curveVertex((float) pnt.x(), (float) pnt.y());
 			}
 			layer.endShape();
@@ -78,15 +78,15 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	}
 
 	@Override
-	public void drawPolygon(List<Vector> points, Painter painter, Queue<Transformation<PGraphics>> transientTransforms) {
+	public void drawPolygon(final List<Vector2D> points, Painter painter, Queue<Transformation> transientTransforms) {
 		bindPainter(painter);
 		if (transientTransforms != null) {
 			pushTransientTransformations(layer, transientTransforms);
 		}
 		{
 			layer.beginShape();
-			synchronized (points) {
-				for (final Vector pnt : points) {
+			synchronized (lock) {
+				for (final Vector2D pnt : points) {
 					layer.vertex((float) pnt.x(), (float) pnt.y());
 				}
 			}
@@ -110,26 +110,26 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	 * @param size
 	 * @param layers
 	 */
-	public void dot(float x, float y, float radius, Painter painter, Queue<Transformation<PGraphics>> transforms) {
+	public void dot(float x, float y, float radius, Painter painter, Queue<Transformation> transforms) {
 		ellipse(x, y, radius / scale, radius / scale, painter, transforms);
 	}
 
-	public void dot(Vector v, float radius, Painter painter, Queue<Transformation<PGraphics>> transforms) {
+	public void dot(Vector2D v, float radius, Painter painter, Queue<Transformation> transforms) {
 		dot((float) v.x(), (float) v.y(), radius, painter, transforms);
 	}
 
 	@Override
-	public void endpointToEndpoint(Vector start, Vector end, Painter painter) {
+	public void endpointToEndpoint(Vector2D start, Vector2D end, Painter painter) {
 		line((float) start.x(), (float) start.y(), (float) end.x(), (float) end.y(), painter);
 	}
 
-	public void vector(Vector startPos, Vector vector, Painter painter) {
-		vector(startPos, vector, 1.0, painter);
+	public void vector2D(Vector2D startPos, Vector2D vector2D, Painter painter) {
+		vector2D(startPos, vector2D, 1.0, painter);
 	}
 
-	public void vector(Vector startPos, Vector vector, double scale, Painter painter) {
-		line((float) startPos.x(), (float) startPos.y(), (float) (startPos.x() + scale * vector.x()),
-				(float) (startPos.y() + scale * vector.y()), painter);
+	public void vector2D(Vector2D startPos, Vector2D vector2D, double scale, Painter painter) {
+		line((float) startPos.x(), (float) startPos.y(), (float) (startPos.x() + scale * vector2D.x()),
+				(float) (startPos.y() + scale * vector2D.y()), painter);
 	}
 
 	/**
@@ -150,12 +150,12 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	}
 
 	@Override
-	public void quad(Vector v1, Vector v2, Vector v3, Vector v4, Painter painter) {
+	public void quad(Vector2D v1, Vector2D v2, Vector2D v3, Vector2D v4, Painter painter) {
 		quad((float) v1.x(), (float) v1.y(), (float) v2.x(), (float) v2.y(), (float) v3.x(), (float) v3.y(),
 				(float) v4.x(), (float) v4.y(), painter);
 	}
 
-	public void drawPath(List<Vector> points, Painter painter) {
+	public void drawPath(List<Vector2D> points, Painter painter) {
 		drawPath(points, painter, null);
 	}
 
@@ -272,16 +272,14 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	 * @param layers
 	 * @param transientTransforms
 	 */
-	private void pushTransientTransformations(PGraphics layer, Queue<Transformation<PGraphics>> transientTransforms) {
-		if (transientTransforms == null)
-			throw new IllegalArgumentException("transforms w null");
-		if (pushedTransientTransformationsCount != 0)
-			throw new IllegalStateException(
-					"There must be no pushed transformations, but instead there were " + pushedTransientTransformationsCount);
+	private void pushTransientTransformations(PGraphics layer, Queue<Transformation> transientTransforms) {
+		checkNotNull(transientTransforms, "transforms were null");
+		checkState(pushedTransientTransformationsCount == 0, "There must be no pushed transformations, but instead there were %s", pushedTransientTransformationsCount);
+
 		pushedTransientTransformationsCount++;
 		layer.pushMatrix();
-		for (final Transformation<PGraphics> t : transientTransforms) {
-			t.apply(layer);
+		for (final Transformation transform : transientTransforms) {
+			applyTransform(transform);
 		}
 	}
 
@@ -291,76 +289,15 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	 * @param layers
 	 */
 	private void popTransientTransformations(PGraphics layer) {
-		if (pushedTransientTransformationsCount != 1)
-			throw new IllegalStateException(
-					"There must be one pushed transformations, but instead there were " + pushedTransientTransformationsCount);
+		checkState(pushedTransientTransformationsCount == 1, "There must be one pushed transformations, but instead there were %s", pushedTransientTransformationsCount);
 		pushedTransientTransformationsCount--;
 		layer.popMatrix();
 	}
 
 	@Override
-	public Transformation<PGraphics> getRotationTransformation(float angle) {
-		return new PGraphicsRotation(angle);
-	}
-
-	@Override
-	public Transformation<PGraphics> getTranslationTransformation(float xShift, float yShift) {
-		return new PGraphicsTranslation(xShift, yShift);
-	}
-
-	@Override
-	public Transformation<PGraphics> getScaleTransformation(float xScale, float yScale) {
-		return new PGraphicsScale(xScale, yScale);
-	}
-
-	public static final class PGraphicsRotation implements Transformation<PGraphics> {
-		private final float angle;
-
-		public PGraphicsRotation(float angle) {
-			this.angle = angle;
-		}
-
-		@Override
-		public void apply(PGraphics layer) {
-			layer.rotate(angle);
-		}
-	}
-
-	public static final class PGraphicsTranslation implements Transformation<PGraphics> {
-		private final float xShift;
-		private final float yShift;
-
-		public PGraphicsTranslation(float xShift, float yShift) {
-			this.xShift = xShift;
-			this.yShift = yShift;
-		}
-
-		@Override
-		public void apply(PGraphics layer) {
-			layer.translate(xShift, yShift);
-		}
-	}
-
-	public static final class PGraphicsScale implements Transformation<PGraphics> {
-		private final float xScale;
-		private final float yScale;
-
-		public PGraphicsScale(float xScale, float yScale) {
-			this.xScale = xScale;
-			this.yScale = yScale;
-		}
-
-		@Override
-		public void apply(PGraphics layer) {
-			layer.scale(xScale, yScale);
-		}
-	}
-
-	@Override
 	public void drawOnto(PGraphics target) {
-
-		if(target.width != layer.width || target.height != layer.height)
-			throw new RuntimeException("Dimensions must match");
+		checkArgument(target.width  == layer.width, "Widths do not match");
+		checkArgument(target.height == layer.height, "Heights do not match");
 
 		layer.endDraw();
 		target.image(layer, 0, 0);
@@ -374,7 +311,7 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	}
 
 	@Override
-	public void dot(Vector pos, float radius, Painter painter) {
+	public void dot(Vector2D pos, float radius, Painter painter) {
 		dot((float) pos.x(), (float) pos.y(), radius, painter);
 	}
 
@@ -382,5 +319,28 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	public double getScale() {
 		return scale;
 	}
+
+	private void applyTransform(Transformation transformation) {
+
+		if(transformation instanceof Rotation) {
+
+			Rotation rotationTransform = (Rotation) transformation;
+			layer.rotate(rotationTransform.angle);
+
+		} else if(transformation instanceof Translation) {
+
+			Translation translationTransform = (Translation) transformation;
+			layer.translate(translationTransform.x, translationTransform.y);
+
+		} else if(transformation instanceof Scale) {
+
+			Scale scaleTransform = (Scale) transformation;
+			layer.scale(scaleTransform.x, scaleTransform.y);
+
+		} else
+			throw new ClassCastException("Unexpected transformation: " + transformation);
+
+	}
+
 
 }

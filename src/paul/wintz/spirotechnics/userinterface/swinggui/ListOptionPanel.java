@@ -1,7 +1,5 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
-import java.awt.event.*;
-
 import javax.swing.*;
 
 import paul.wintz.userinterface.optiontypes.ListOption;
@@ -24,17 +22,13 @@ public class ListOptionPanel<T> extends OptionPanel<ListOption<T>> {
 
 	private class ListOptionComboBox extends JComboBox<T> {
 
+		@SuppressWarnings("unchecked")
 		public ListOptionComboBox(final ListOption<T> listOption) {
 			for (final T mode : listOption) {
 				addItem(mode);
 			}
 
-			addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					listOption.setSelected((T) getSelectedItem());
-				}
-			});
+			addActionListener((unused) -> listOption.setSelected((T) getSelectedItem()));
 
 			setSelectedItem(option.getSelected());
 		}

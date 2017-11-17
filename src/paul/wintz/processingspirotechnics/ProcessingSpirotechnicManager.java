@@ -1,5 +1,6 @@
 package paul.wintz.processingspirotechnics;
 
+import static paul.wintz.logging.Lg.makeTAG;
 import static paul.wintz.spirotechnics.InitialValues.SIDEBAR_WIDTH;
 
 import java.awt.EventQueue;
@@ -8,22 +9,22 @@ import java.io.File;
 import java.util.List;
 
 import paul.wintz.canvas.Layer;
+import paul.wintz.logging.Lg;
 import paul.wintz.spirotechnics.*;
 import paul.wintz.spirotechnics.userinterface.swinggui.OptionsJFrame;
 import paul.wintz.userinterface.HasValue;
 import processing.core.*;
 
-public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics> {
+public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
+	private static final String TAG = makeTAG(ProcessingSpirotechnicManager.class);
 	private final PApplet pApplet;
-	OptionsJFrame frame;
+	private OptionsJFrame frame;
 
 	public ProcessingSpirotechnicManager(final PApplet pApplet) {
 		super(
 				new PGraphicsLayerFactory(),
-				new MyDisplayer(pApplet),
+				new PGraphicsToPAppletDisplayer(pApplet),
 				new MyLayerCompositor(),
-				new MyToaster(pApplet),
-				new MyLogger(),
 				new ProcessingGifRecording());
 		this.pApplet = pApplet;
 
@@ -31,22 +32,24 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 	}
 
 	private void openOptionsWindow() {
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					frame = new OptionsJFrame(getUserInterface().getOptionsTree());
-					frame.setVisible(true);
-					frame.addWindowListener(new java.awt.event.WindowAdapter() {
-						@Override
-						public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-							pApplet.exit();
-						}
-					});
-				} catch (final Exception e) {
-					e.printStackTrace();
-				}
+
+		EventQueue.invokeLater(() -> {
+
+			try {
+				frame = new OptionsJFrame(getOptionsTree());
+				frame.setVisible(true);
+				frame.addWindowListener(new java.awt.event.WindowAdapter() {
+
+					@Override
+					public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+						pApplet.exit();
+					}
+				});
+
+			} catch (final Exception e) {
+				Lg.e(TAG, "Failed to create options window", e);
 			}
+
 		});
 	}
 
@@ -82,67 +85,10 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 		}
 	}
 
-	/**
-	 * Draw text to the PApplet that describes the most recent UI action. The
-	 * text fades away over a set number of frames.
-	 *
-	 * @param pApplet
-	 */
-	private final static class MyToaster extends SpirotechnicManager.ToastCallback {
+	private static final class PGraphicsToPAppletDisplayer implements SpirotechnicMain.ImageDisplayer<PGraphics> {
 		private final PApplet pApplet;
 
-		public MyToaster(PApplet pApplet) {
-			this.pApplet = pApplet;
-		}
-
-		@Override
-		protected void onDrawToast() {
-			framesSinceKeyPress++;
-
-			pApplet.textAlign(PConstants.CENTER, PConstants.BOTTOM);
-			pApplet.textSize(24);
-			final int alpha = 255 - 3 * framesSinceKeyPress; // TODO: Make these
-			// calculations
-			// more
-			// structured
-			final int x = pApplet.width / 2;
-			final int y = pApplet.height - 30;
-
-			// draw Shadow
-			pApplet.fill(0, alpha);
-			pApplet.text(message, x + 2, y + 2);
-
-			// drawText
-			pApplet.fill(255, alpha);
-			pApplet.text(message, x, y);
-		}
-	}
-
-	final static class MyLogger implements SpirotechnicManager.LogCallback {
-		public MyLogger() {
-		}
-
-		@Override
-		public void logStd(String tag, String message) {
-			System.out.println(message);
-		}
-
-		@Override
-		public void logError(String tag, String message) {
-			System.err.println(message);
-		}
-
-		@Override
-		public void logError(String tag, String message, Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	final static class MyDisplayer implements SpirotechnicManager.ImageDisplayer<PGraphics> {
-		private final PApplet pApplet;
-
-		public MyDisplayer(PApplet pApplet) {
+		public PGraphicsToPAppletDisplayer(PApplet pApplet) {
 			this.pApplet = pApplet;
 		}
 
@@ -163,7 +109,9 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 	 * @author PaulWintz
 	 *
 	 */
-	private static class ProcessingGifRecording implements GifRecorder<PGraphics> {
+	private static class ProcessingGifRecording implements AnimationSaver<PGraphics> {
+		private static final String TAG = makeTAG(ProcessingGifRecording.class);
+
 		private gifAnimation.GifMaker gifMaker;
 		private File file;
 		private HasValue<Integer> fpsOption;
@@ -173,13 +121,13 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 		private void printMaxFramesToBeUnderGivenFileSize(long maxSize) {
 			final double sizePerFrame = (double) file.length() / (double) framesRecorded;
 			final double maxNumber = maxSize / sizePerFrame;
-			System.out.println("The maximum number of frames is: " + maxNumber);
+			Lg.i(TAG, "The maximum number of frames is: " + maxNumber);
 		}
 
 		@Override
 		public void open(File file) {
 			this.file = file;
-			System.out.println("Beginning GIF record to: " + file.getPath());
+			Lg.i(TAG, "Beginning GIF record to: " + file.getPath());
 			framesRecorded = 0;
 			gifMaker = ProcessingUtils.newGifMaker(file);
 			gifMaker.setRepeat(0);
@@ -207,14 +155,14 @@ public class ProcessingSpirotechnicManager extends SpirotechnicManager<PGraphics
 		}
 
 		@Override
-		public void close() throws IllegalStateException {
+		public void close() {
 			if (!isOpen)
 				throw new IllegalStateException("The GIF is not open");
 
 			isOpen = false;
 
 			gifMaker.finish();
-			System.out.println("GIF closed. Number of frames: " + framesRecorded);
+			Lg.i(TAG, "GIF closed. Number of frames: " + framesRecorded);
 
 			printMaxFramesToBeUnderGivenFileSize((long) 3e6);
 

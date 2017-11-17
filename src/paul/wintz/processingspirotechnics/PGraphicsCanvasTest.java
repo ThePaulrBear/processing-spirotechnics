@@ -26,15 +26,17 @@ public class PGraphicsCanvasTest {
 
 		@Override
 		public void setup() {
-			new ProcessingUtils(this);
+			ProcessingUtils.initialize(this);
 		}
 
-		public final static void run(){
+		public final static void run() throws InterruptedException{
 			testPApplet = new TestPApplet();
 			PApplet.runSketch(new String[] { "TestPApplet" }, testPApplet);
 
 			while(!ProcessingUtils.isInititialized()){
 				//wait for the testPapplet to initialize
+				Thread.sleep(5);
+				System.out.println("Waiting to initialize ProcessingUtils");
 			}
 		}
 	}
@@ -115,7 +117,7 @@ public class PGraphicsCanvasTest {
 	}
 
 
-	@Test
+	@Test(timeout=5000)
 	public final void testCreateLayer() {
 		for(int width = 1; width < 3000; width += 500){
 			for(int height = 1; height < 3000; height += 500){
