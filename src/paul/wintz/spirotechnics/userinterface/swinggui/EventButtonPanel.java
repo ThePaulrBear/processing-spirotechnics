@@ -2,7 +2,7 @@ package paul.wintz.spirotechnics.userinterface.swinggui;
 
 import javax.swing.*;
 
-import paul.wintz.userinterface.optiontypes.EventOption;
+import paul.wintz.userinterface.optiontypes.events.EventOption;
 
 @SuppressWarnings("serial")
 class EventButtonPanel extends OptionPanel<EventOption> {

@@ -1,47 +1,64 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import paul.wintz.userinterface.optiontypes.NumberOption;
-import paul.wintz.userinterface.optiontypes.UserInputOption.OptionUpdatedCallback;
+import javax.swing.*;
+
+import paul.wintz.userinterface.optiontypes.FloatOption;
+import paul.wintz.userinterface.optiontypes.integers.NumberOption;
 
 @SuppressWarnings("serial")
-class NumberOptionPanel extends OptionPanel<NumberOption> {
+class NumberOptionPanel extends OptionPanel<NumberOption<?>> {
 
-	NumberOptionPanel(JPanel parentPanel, NumberOption option) {
-		super(parentPanel, option);
+	NumberOptionPanel(JPanel parentPanel, NumberOption<?> option) {
+		super(checkNotNull(parentPanel), checkNotNull(option));
 		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 	}
 
-	private class NumberOptionSpinner extends JSpinner {
-		public NumberOptionSpinner(final NumberOption option) {
+	private class NumberOptionSpinner<N extends Number> extends JSpinner {
+		public NumberOptionSpinner(final NumberOption<N> option) {
 			setValue(option.getValue());
 
-			addChangeListener(new ChangeListener() {
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					option.setValue((int) getValue());
-					updateLabel();
-				}
+			addChangeListener(pass -> {
+				option.setValue((N) getValue());
+				updateLabel();
 			});
 
-			option.addOptionUpdatedCallback(new OptionUpdatedCallback() {
-				@Override
-				public void onUpdate() {
-					setValue(option.getValue());
-					updateLabel();
-				}
+			option.addOnValueChangedListener(newValue -> {
+				setValue(newValue);
+				updateLabel();
 			});
+		}
+	}
+
+	private class OptionSlider extends JSlider {
+		public OptionSlider(final FloatOption option) {
+			setMaximum((int) (100 * option.getMax()));
+			setMinimum((int) (100 * option.getMin()));
+
+			if (16 < 15) {
+				setPaintTicks(true);
+				setMinorTickSpacing(1);
+				setSnapToTicks(true);
+			}
+			setValue((int) (100 * option.getValue()));
+
+			addChangeListener(arg0 -> {
+				option.setValue(0.01f * getValue());
+				updateLabel();
+			});
+
+			option.addOnValueChangedListener(newValue -> setValue((int) (100 * newValue)));
 		}
 	}
 
 	@Override
 	protected void createControl() {
-		final JSpinner spinner = new NumberOptionSpinner(option);
-		this.add(spinner);
+		if(option instanceof FloatOption) {
+			this.add(new OptionSlider((FloatOption) option));
+		} else {
+			this.add(new NumberOptionSpinner<>(option));
+		}
 	}
+
 }

@@ -8,16 +8,18 @@ import javax.swing.*;
 
 import paul.wintz.userinterface.HasValue;
 import paul.wintz.userinterface.optiontypes.*;
+import paul.wintz.userinterface.optiontypes.events.EventOption;
+import paul.wintz.userinterface.optiontypes.integers.NumberOption;
+import paul.wintz.utils.exceptions.UnhandledCaseException;
 
 @SuppressWarnings("serial")
-abstract class OptionPanel<T extends UserInputOption> extends JPanel {
+abstract class OptionPanel<T extends UserInputOption<?>> extends JPanel {
 	protected final T option;
 
 	protected JLabel label;
 
 	OptionPanel(JPanel parentPanel, T option) {
-		super();
-		this.option = option;
+		this.option = checkNotNull(option);
 
 		parentPanel.add(this);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -43,29 +45,27 @@ abstract class OptionPanel<T extends UserInputOption> extends JPanel {
 	protected void updateLabel() {
 		final StringBuilder sb = new StringBuilder(option.getDescription());
 		if (option instanceof HasValue<?>) {
-			sb.append(": ").append(((HasValue<?>) option).getValue().toString());
+			sb.append(": ").append(((HasValue<?>) option).getValue());
 		}
 		label.setText(sb.toString());
 	}
 
-	public static OptionPanel<?> makeOptionPanel(UserInputOption option, OptionsGroupPanel parent) {
+	public static OptionPanel<?> makeOptionPanel(UserInputOption<?> option, OptionsGroupPanel parent) {
 		checkNotNull(option, "Option was null");
 		checkNotNull(parent, "Parent panel was null");
 
-		if (option instanceof IntegerRangeOption)
-			return new SliderOptionPanel(parent, (IntegerRangeOption) option);
-		else if (option instanceof NumberOption)
-			return new NumberOptionPanel(parent, (NumberOption) option);
-		else if (option instanceof BooleanOption)
+		if (option instanceof NumberOption)
+			return new NumberOptionPanel(parent, (NumberOption<?>) option);
+		if (option instanceof BooleanOption)
 			return new ToggleOptionPanel(parent, (BooleanOption) option);
-		else if (option instanceof FractionOption)
+		if (option instanceof FractionOption)
 			return new FractionOptionPanel(parent, (FractionOption) option);
-		else if (option instanceof EventOption)
+		if (option instanceof EventOption)
 			return new EventButtonPanel(parent, (EventOption) option);
-		else if (option instanceof ListOption<?>)
+		if (option instanceof ListOption<?>)
 			return new ListOptionPanel<>(parent, (ListOption<?>) option);
 
-		throw new RuntimeException("Option type not supported: " + option.getClass().getSuperclass());
+		throw new UnhandledCaseException(option.getClass());
 	}
 
 }

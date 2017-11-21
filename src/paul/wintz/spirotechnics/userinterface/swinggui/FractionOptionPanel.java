@@ -1,14 +1,9 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.*;
+import javax.swing.event.*;
 
 import paul.wintz.userinterface.optiontypes.FractionOption;
-import paul.wintz.userinterface.optiontypes.UserInputOption.OptionUpdatedCallback;
 
 @SuppressWarnings("serial")
 class FractionOptionPanel extends OptionPanel<FractionOption> {
@@ -20,30 +15,16 @@ class FractionOptionPanel extends OptionPanel<FractionOption> {
 
 	private class NumeratorSpinner extends JSpinner {
 		public NumeratorSpinner(final FractionOption option) {
-			// setMaximumSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
 			setValue(option.getNumerator());
-			addChangeListener(new ChangeListener() {
 
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					option.setNumerator((int) getValue());
-				}
-			});
-
-			option.addOptionUpdatedCallback(new OptionUpdatedCallback() {
-
-				@Override
-				public void onUpdate() {
-					setValue(option.getNumerator());
-				}
-			});
+			addChangeListener(pass -> option.setNumerator((int) getValue()));
+			option.addOnValueChangedListener(newValue -> setValue(newValue.getNumerator()));
 
 		}
 	}
 
 	private class DenominatorSpinner extends JSpinner {
 		public DenominatorSpinner(final FractionOption option) {
-			// setMaximumSize(new Dimension(SPINNER_WIDTH, SPINNER_HEIGHT));
 			setValue(option.getDenominator());
 			addChangeListener(new ChangeListener() {
 
@@ -57,23 +38,18 @@ class FractionOptionPanel extends OptionPanel<FractionOption> {
 				 */
 				private void skipZeroValue(final FractionOption option) {
 					if ((int) getValue() == 0) {
-						if (option.getDenominator() < 0)
+						if (option.getDenominator() < 0) {
 							setValue(1);
-						else
+						} else {
 							setValue(-1);
+						}
 					} else {
 						option.setDenominator((int) getValue());
 					}
 				}
 			});
 
-			option.addOptionUpdatedCallback(new OptionUpdatedCallback() {
-
-				@Override
-				public void onUpdate() {
-					setValue(option.getDenominator());
-				}
-			});
+			option.addOnValueChangedListener(newValue -> setValue(option.getDenominator()));
 		}
 	}
 

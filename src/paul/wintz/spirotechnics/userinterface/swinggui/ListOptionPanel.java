@@ -18,6 +18,8 @@ public class ListOptionPanel<T> extends OptionPanel<ListOption<T>> {
 
 		this.add(comboBox);
 
+		updateLabel();
+
 	}
 
 	private class ListOptionComboBox extends JComboBox<T> {
@@ -28,9 +30,9 @@ public class ListOptionPanel<T> extends OptionPanel<ListOption<T>> {
 				addItem(mode);
 			}
 
-			addActionListener((unused) -> listOption.setSelected((T) getSelectedItem()));
-
 			setSelectedItem(option.getSelected());
+			addActionListener(unused -> listOption.setSelected((T) getSelectedItem()));
+
 		}
 	}
 }

@@ -34,7 +34,7 @@ class OptionsGroupPanel extends JPanel {
 
 		refreshList();
 
-		optionGroup.addListChangeListener(() -> refreshList());
+		optionGroup.addListChangeListener(this::refreshList);
 	}
 
 	public void add(OptionItem o) {
@@ -42,7 +42,7 @@ class OptionsGroupPanel extends JPanel {
 		if (o instanceof OptionGroup) {
 			new OptionsGroupPanel(this, (OptionGroup) o);
 		} else if(o instanceof UserInputOption){
-			OptionPanel.makeOptionPanel((UserInputOption) o, this);
+			OptionPanel.makeOptionPanel((UserInputOption<?>) o, this);
 		} else if(o == null)
 			throw new NullPointerException();
 		else

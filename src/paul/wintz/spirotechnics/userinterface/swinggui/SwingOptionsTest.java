@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import paul.wintz.logging.Lg;
 import paul.wintz.userinterface.optiontypes.*;
+import paul.wintz.userinterface.optiontypes.integers.*;
 
 public class SwingOptionsTest {
 
@@ -31,49 +32,55 @@ public class SwingOptionsTest {
 		final OptionGroup optionList = new OptionGroup();
 		optionList.addOptions(new OptionGroup("Tab 1",
 				new OptionGroup("Option Group 1",
-						new IntegerRangeOption(5, 20, 100, "Slider 1"),
+						makeTestOption(),
 						new BooleanOption(true, "Boolean Option")))
 				);
 		optionList.addOptions(new OptionGroup("Tab 2",
 				new OptionGroup("Option Group 2",
-						new IntegerRangeOption(1, 0, 10, "Slider 2"),
-						new IntegerRangeOption(1, 0, 5, "Slider 3"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider")),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption()),
 				new OptionGroup("Option Group 2",
-						new IntegerRangeOption(1, 0, 10, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider"),
-						new IntegerRangeOption(1, 0, 5, "Slider")))
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption(),
+						makeTestOption()))
 				);
 		return optionList;
+	}
+
+
+	private static NumberOption makeTestOption() {
+		return IntegerOption.builder().description("Test").initial(1).range(0, 5).build();
 	}
 
 

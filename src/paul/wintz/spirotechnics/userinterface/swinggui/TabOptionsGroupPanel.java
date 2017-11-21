@@ -11,6 +11,8 @@ import javax.swing.border.BevelBorder;
 
 import paul.wintz.logging.Lg;
 import paul.wintz.userinterface.optiontypes.*;
+import paul.wintz.userinterface.optiontypes.events.EventOption;
+import paul.wintz.userinterface.optiontypes.integers.IntegerOption;
 
 @SuppressWarnings("serial")
 class TabOptionsGroupPanel extends JPanel {
@@ -38,17 +40,15 @@ class TabOptionsGroupPanel extends JPanel {
 		if (o instanceof OptionGroup) {
 			new OptionsGroupPanel(this, (OptionGroup) o);
 		} else if (o instanceof UserInputOption) {
-			addOption((UserInputOption) o);
+			addOption((UserInputOption<?>) o);
 		}
 	}
 
-	private void addOption(@Nonnull UserInputOption opt) {
+	private void addOption(@Nonnull UserInputOption<?> opt) {
 		checkNotNull(opt);
 
-		if (opt instanceof IntegerRangeOption) {
-			new SliderOptionPanel(this, (IntegerRangeOption) opt);
-		} else if (opt instanceof NumberOption) {
-			new NumberOptionPanel(this, (NumberOption) opt);
+		if (opt instanceof IntegerOption) {
+			new NumberOptionPanel(this, (IntegerOption) opt);
 		} else if (opt instanceof EventOption) {
 			new EventButtonPanel(this, (EventOption) opt);
 		} else if (opt instanceof BooleanOption) {

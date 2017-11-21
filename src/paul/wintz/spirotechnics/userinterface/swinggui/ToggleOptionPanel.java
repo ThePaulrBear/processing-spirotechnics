@@ -22,8 +22,8 @@ class ToggleOptionPanel extends OptionPanel<BooleanOption> {
 				updateLabel();
 			});
 
-			option.addOptionUpdatedCallback(() -> {
-				setSelected(option.getValue());
+			option.addOnValueChangedListener(newValue -> {
+				setSelected(newValue);
 				updateLabel();
 			});
 		}
