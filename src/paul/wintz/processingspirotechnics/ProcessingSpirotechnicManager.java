@@ -1,7 +1,9 @@
 package paul.wintz.processingspirotechnics;
 
+import static com.google.common.base.Preconditions.checkState;
 import static paul.wintz.logging.Lg.makeTAG;
 import static paul.wintz.spirotechnics.InitialValues.SIDEBAR_WIDTH;
+import static paul.wintz.utils.Utils.checkPositive;
 
 import java.awt.EventQueue;
 import java.awt.event.WindowEvent;
@@ -12,7 +14,6 @@ import paul.wintz.canvas.Layer;
 import paul.wintz.logging.Lg;
 import paul.wintz.spirotechnics.*;
 import paul.wintz.spirotechnics.userinterface.swinggui.OptionsJFrame;
-import paul.wintz.userinterface.HasValue;
 import processing.core.*;
 
 public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
@@ -114,7 +115,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 
 		private gifAnimation.GifMaker gifMaker;
 		private File file;
-		private HasValue<Integer> fpsOption;
+		private float fps;
 		private int framesRecorded = 0;
 		private boolean isOpen = false;
 
@@ -127,7 +128,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 		@Override
 		public void open(File file) {
 			this.file = file;
-			Lg.i(TAG, "Beginning GIF record to: " + file.getPath());
+			Lg.i(TAG, "Beginning GIF record to: " + file.getAbsolutePath());
 			framesRecorded = 0;
 			gifMaker = ProcessingUtils.newGifMaker(file);
 			gifMaker.setRepeat(0);
@@ -137,11 +138,11 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 
 		@Override
 		public void addFrame(PGraphics frame) {
-			if (!isOpen)
-				throw new IllegalStateException("The GIF is not open");
+			checkState(isOpen, "The GIF is not open");
 
-			final int frameDelay = (int) (1000.0 / (double) fpsOption.getValue());
-			gifMaker.setDelay(frameDelay);
+			final int frameDelayInMillis = (int) (1000.0f / fps);
+			Lg.d(TAG, "delay: " + frameDelayInMillis);
+			gifMaker.setDelay(frameDelayInMillis);
 			gifMaker.addFrame(frame);
 			framesRecorded++;
 		}
@@ -156,8 +157,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 
 		@Override
 		public void close() {
-			if (!isOpen)
-				throw new IllegalStateException("The GIF is not open");
+			checkState(isOpen, "The GIF is not open");
 
 			isOpen = false;
 
@@ -171,8 +171,10 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 		}
 
 		@Override
-		public void setFPSOption(HasValue<Integer> fpsOption) {
-			this.fpsOption = fpsOption;
+		public void setFPS(float fps) {
+			checkPositive(fps);
+			Lg.i(TAG, "fps set to " + fps);
+			this.fps = fps;
 		}
 	}
 
