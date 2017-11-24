@@ -6,7 +6,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import paul.wintz.userinterface.HasValue;
 import paul.wintz.userinterface.optiontypes.*;
 import paul.wintz.userinterface.optiontypes.events.EventOption;
 import paul.wintz.userinterface.optiontypes.integers.NumberOption;
@@ -43,9 +42,13 @@ abstract class OptionPanel<T extends UserInputOption<?>> extends JPanel {
 	protected abstract void createControl();
 
 	protected void updateLabel() {
+		label.setText(option.getDescription());
+	}
+
+	protected void updateLabelWithValue() {
 		final StringBuilder sb = new StringBuilder(option.getDescription());
-		if (option instanceof HasValue<?>) {
-			sb.append(": ").append(((HasValue<?>) option).getValue());
+		if (option.getValue() != null) {
+			sb.append(": ").append(option.getValue());
 		}
 		label.setText(sb.toString());
 	}
