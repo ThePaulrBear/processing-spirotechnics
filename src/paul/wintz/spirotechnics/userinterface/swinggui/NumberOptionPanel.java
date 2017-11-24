@@ -12,16 +12,22 @@ class NumberOptionPanel extends OptionPanel<NumberOption<?>> {
 
 	NumberOptionPanel(JPanel parentPanel, NumberOption<?> option) {
 		super(checkNotNull(parentPanel), checkNotNull(option));
-		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 	}
 
 	private class NumberOptionSpinner<N extends Number> extends JSpinner {
 		public NumberOptionSpinner(final NumberOption<N> option) {
 			setValue(option.getValue());
+			updateLabel();
 
 			addChangeListener(pass -> {
-				option.setValue((N) getValue());
-				updateLabel();
+
+				N newValue = (N) getValue();
+				if(option.isValidValue(newValue)) {
+					option.setValue(newValue);
+					updateLabel();
+				} else {
+					label.setText(option.getDescription() + ": value not valid");
+				}
 			});
 
 			option.addOnValueChangedListener(newValue -> {
@@ -41,22 +47,38 @@ class NumberOptionPanel extends OptionPanel<NumberOption<?>> {
 				setMinorTickSpacing(1);
 				setSnapToTicks(true);
 			}
-			setValue((int) (100 * option.getValue()));
+			setUiValue(option.getValue());
 
 			addChangeListener(arg0 -> {
-				option.setValue(0.01f * getValue());
-				updateLabel();
+				setEntityValue(option);
 			});
 
-			option.addOnValueChangedListener(newValue -> setValue((int) (100 * newValue)));
+			option.addOnValueChangedListener(this::setUiValue);
+		}
+
+		private void setEntityValue(final FloatOption option) {
+			float newValue = 0.01f * getValue();
+			if(option.isValidValue(newValue)) {
+				option.setValue(newValue);
+				updateLabelWithValue();
+			} else {
+				label.setText(option.getDescription() + ": value not valid");
+			}
+		}
+
+		private void setUiValue(Float value) {
+			setValue((int) (100 * value));
+			updateLabelWithValue();
 		}
 	}
 
 	@Override
 	protected void createControl() {
 		if(option instanceof FloatOption) {
+			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			this.add(new OptionSlider((FloatOption) option));
 		} else {
+			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 			this.add(new NumberOptionSpinner<>(option));
 		}
 	}
