@@ -3,7 +3,7 @@ package paul.wintz.spirotechnics.userinterface.swinggui;
 import javax.swing.*;
 import javax.swing.event.*;
 
-import paul.wintz.userinterface.optiontypes.FractionOption;
+import paul.wintz.uioptiontypes.FractionOption;
 
 @SuppressWarnings("serial")
 class FractionOptionPanel extends OptionPanel<FractionOption> {

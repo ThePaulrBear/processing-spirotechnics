@@ -4,8 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.swing.*;
 
-import paul.wintz.userinterface.optiontypes.FloatOption;
-import paul.wintz.userinterface.optiontypes.integers.NumberOption;
+import paul.wintz.uioptiontypes.FloatOption;
+import paul.wintz.uioptiontypes.integers.NumberOption;
 
 @SuppressWarnings("serial")
 class NumberOptionPanel extends OptionPanel<NumberOption<?>> {

@@ -1,7 +1,8 @@
 package paul.wintz.processingspirotechnics;
 
-import paul.wintz.logging.*;
-import paul.wintz.spirotechnics.*;
+import paul.wintz.parametricequationdrawer.*;
+import paul.wintz.utils.Toast;
+import paul.wintz.utils.logging.*;
 import processing.core.*;
 
 public class SpiroPApplet extends PApplet {

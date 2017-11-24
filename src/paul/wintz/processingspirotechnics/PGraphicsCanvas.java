@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.*;
 import java.util.*;
 
 import paul.wintz.canvas.*;
-import paul.wintz.utils.Vector2D;
+import paul.wintz.math.Vector2D;
 import processing.core.*;
 
 public class PGraphicsCanvas implements Layer<PGraphics> {

@@ -2,13 +2,14 @@ package paul.wintz.spirotechnics.userinterface.swinggui;
 
 import javax.swing.*;
 
-import paul.wintz.userinterface.optiontypes.ListOption;
+import paul.wintz.uioptiontypes.ListOption;
 
 @SuppressWarnings("serial")
 public class ListOptionPanel<T> extends OptionPanel<ListOption<T>> {
 
 	public ListOptionPanel(JPanel parentPanel, ListOption<T> listOption) {
 		super(parentPanel, listOption);
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.awt.Dimension;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
-import paul.wintz.userinterface.optiontypes.*;
+import paul.wintz.uioptiontypes.*;
 
 @SuppressWarnings("serial")
 class OptionsGroupPanel extends JPanel {

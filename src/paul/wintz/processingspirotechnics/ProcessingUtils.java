@@ -6,8 +6,8 @@ import java.awt.Desktop;
 import java.io.*;
 
 import gifAnimation.GifMaker;
-import paul.wintz.logging.Lg;
-import paul.wintz.spirotechnics.canvas.SaveType;
+import paul.wintz.parametricequationdrawer.canvas.SaveType;
+import paul.wintz.utils.logging.Lg;
 import processing.core.*;
 
 public final class ProcessingUtils {

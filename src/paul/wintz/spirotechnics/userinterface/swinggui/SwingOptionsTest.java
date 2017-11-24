@@ -2,9 +2,9 @@ package paul.wintz.spirotechnics.userinterface.swinggui;
 
 import java.awt.EventQueue;
 
-import paul.wintz.logging.Lg;
-import paul.wintz.userinterface.optiontypes.*;
-import paul.wintz.userinterface.optiontypes.integers.*;
+import paul.wintz.uioptiontypes.*;
+import paul.wintz.uioptiontypes.integers.*;
+import paul.wintz.utils.logging.Lg;
 
 public class SwingOptionsTest {
 

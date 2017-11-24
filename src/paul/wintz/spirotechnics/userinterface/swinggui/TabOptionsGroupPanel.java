@@ -1,7 +1,7 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static paul.wintz.logging.Lg.makeTAG;
+import static paul.wintz.utils.logging.Lg.makeTAG;
 
 import java.awt.FlowLayout;
 
@@ -9,10 +9,10 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
-import paul.wintz.logging.Lg;
-import paul.wintz.userinterface.optiontypes.*;
-import paul.wintz.userinterface.optiontypes.events.EventOption;
-import paul.wintz.userinterface.optiontypes.integers.IntegerOption;
+import paul.wintz.uioptiontypes.*;
+import paul.wintz.uioptiontypes.events.EventOption;
+import paul.wintz.uioptiontypes.integers.IntegerOption;
+import paul.wintz.utils.logging.Lg;
 
 @SuppressWarnings("serial")
 class TabOptionsGroupPanel extends JPanel {

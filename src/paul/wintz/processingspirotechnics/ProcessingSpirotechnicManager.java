@@ -1,19 +1,20 @@
 package paul.wintz.processingspirotechnics;
 
 import static com.google.common.base.Preconditions.checkState;
-import static paul.wintz.logging.Lg.makeTAG;
-import static paul.wintz.spirotechnics.InitialValues.SIDEBAR_WIDTH;
+import static paul.wintz.parametricequationdrawer.InitialValues.SIDEBAR_WIDTH;
 import static paul.wintz.utils.Utils.checkPositive;
+import static paul.wintz.utils.logging.Lg.makeTAG;
 
 import java.awt.EventQueue;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.List;
 
-import paul.wintz.canvas.Layer;
-import paul.wintz.logging.Lg;
+import paul.wintz.canvas.*;
+import paul.wintz.parametricequationdrawer.*;
 import paul.wintz.spirotechnics.*;
 import paul.wintz.spirotechnics.userinterface.swinggui.OptionsJFrame;
+import paul.wintz.utils.logging.Lg;
 import processing.core.*;
 
 public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
@@ -69,7 +70,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 		}
 	}
 
-	private static final class MyLayerCompositor implements LayersCompsitor<PGraphics> {
+	private static final class MyLayerCompositor implements ImageCompositor<PGraphics> {
 
 		final PGraphics base = ProcessingUtils.createPGraphics(1, 1);
 

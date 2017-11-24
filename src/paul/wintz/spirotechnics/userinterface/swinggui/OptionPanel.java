@@ -6,9 +6,9 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import paul.wintz.userinterface.optiontypes.*;
-import paul.wintz.userinterface.optiontypes.events.EventOption;
-import paul.wintz.userinterface.optiontypes.integers.NumberOption;
+import paul.wintz.uioptiontypes.*;
+import paul.wintz.uioptiontypes.events.EventOption;
+import paul.wintz.uioptiontypes.integers.NumberOption;
 import paul.wintz.utils.exceptions.UnhandledCaseException;
 
 @SuppressWarnings("serial")

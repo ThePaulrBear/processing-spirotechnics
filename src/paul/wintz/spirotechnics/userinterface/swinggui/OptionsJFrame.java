@@ -7,8 +7,8 @@ import java.awt.CardLayout;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import paul.wintz.logging.Lg;
-import paul.wintz.userinterface.optiontypes.*;
+import paul.wintz.uioptiontypes.*;
+import paul.wintz.utils.logging.Lg;
 
 @SuppressWarnings("serial")
 public class OptionsJFrame extends JFrame {
@@ -18,7 +18,7 @@ public class OptionsJFrame extends JFrame {
 
 	public OptionsJFrame(OptionGroup optionGroup) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 700);
+		setBounds(100, 100, 1000, 700);
 
 		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane);

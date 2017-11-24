@@ -2,7 +2,7 @@ package paul.wintz.spirotechnics.userinterface.swinggui;
 
 import javax.swing.*;
 
-import paul.wintz.userinterface.optiontypes.BooleanOption;
+import paul.wintz.uioptiontypes.BooleanOption;
 
 @SuppressWarnings("serial")
 class ToggleOptionPanel extends OptionPanel<BooleanOption> {
