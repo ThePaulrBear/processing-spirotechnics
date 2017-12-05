@@ -11,9 +11,14 @@ import processing.core.*;
 public class PGraphicsCanvas implements Layer<PGraphics> {
 
 	private final PGraphics layer;
-	private int width, height;
-	private float scale, rotation, centerX, centerY;
+	private int width;
+	private int height;
+	private float scale;
+	private float rotation;
+	private float centerX;
+	private float centerY;
 
+	private final List<Transformation> noTransforms = Collections.<Transformation>emptyList();
 	private final Object lock = new Object();
 
 	public PGraphicsCanvas(int width, int height) {
@@ -33,18 +38,17 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	}
 
 	@Override
-	public void ellipse(float xCenter, float yCenter, float width, float height, Painter painter, Queue<Transformation> transientTransforms) {
+	public void ellipse(float xCenter, float yCenter, float width, float height, Painter painter) {
+		ellipse(xCenter, yCenter, width, height, painter, noTransforms);
+	}
+
+	@Override
+	public void ellipse(float xCenter, float yCenter, float width, float height, Painter painter, List<Transformation> transientTransforms) {
 		bindPainter(painter);
-		if (transientTransforms != null) {
-			pushTransientTransformations(layer, transientTransforms);
-		}
-		{
+		drawWithTransformations(() -> {
 			layer.ellipseMode(PConstants.CENTER);
 			layer.ellipse(xCenter, yCenter, width, height);
-		}
-		if (transientTransforms != null) {
-			popTransientTransformations(layer);
-		}
+		}, transientTransforms);
 	}
 
 	@Override
@@ -54,67 +58,68 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	}
 
 	@Override
-	public void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, Painter painter) {
+	public void rectangle(float x, float y, float width, float height, Painter painter) {
 		bindPainter(painter);
-		layer.quad(x1, y1, x2, y2, x3, y3, x4, y4);
+		layer.rect(x, y, width, height);
 	}
 
 	@Override
-	public void drawPath(List<Vector2D> points, Painter painter, Queue<Transformation> transientTransforms) {
+	public void rectangle(float x, float y, float width, float height, Painter painter, List<Transformation> transforms) {
 		bindPainter(painter);
-		if (transientTransforms != null) {
-			pushTransientTransformations(layer, transientTransforms);
-		}
-		{
+		drawWithTransformations(() -> layer.rect(x, y, width, height), transforms);
+	}
+
+	@Override
+	public void quad(Vector2D corner0, Vector2D corner1, Vector2D corner2, Vector2D corner3, Painter painter) {
+		bindPainter(painter);
+		layer.quad((float) corner0.x(), (float) corner0.y(),
+				(float) corner1.x(), (float) corner1.y(),
+				(float) corner2.x(), (float) corner2.y(),
+				(float) corner3.x(), (float) corner3.y());
+	}
+
+	@Override
+	public void drawPath(List<Vector2D> points, Painter painter, List<Transformation> transientTransforms) {
+		bindPainter(painter);
+		drawWithTransformations(() -> {
 			layer.beginShape();
 			for (final Vector2D pnt : points) {
 				layer.curveVertex((float) pnt.x(), (float) pnt.y());
 			}
 			layer.endShape();
-		}
-		if (transientTransforms != null) {
-			popTransientTransformations(layer);
-		}
+		}, transientTransforms);
 	}
 
 	@Override
-	public void drawPolygon(final List<Vector2D> points, Painter painter, Queue<Transformation> transientTransforms) {
-		bindPainter(painter);
-		if (transientTransforms != null) {
-			pushTransientTransformations(layer, transientTransforms);
-		}
-		{
-			layer.beginShape();
-			synchronized (lock) {
+	public void drawPolygon(final List<Vector2D> points, final Painter painter) {
+		drawPolygon(points, painter, noTransforms);
+	}
+
+	@Override
+	public void drawPolygon(final List<Vector2D> points, Painter painter, List<Transformation> transientTransforms) {
+		synchronized (lock) {
+			bindPainter(painter);
+			drawWithTransformations(() -> {
+				layer.beginShape();
+
 				for (final Vector2D pnt : points) {
 					layer.vertex((float) pnt.x(), (float) pnt.y());
 				}
-			}
-			layer.endShape();
-		}
-		if (transientTransforms != null) {
-			popTransientTransformations(layer);
+				layer.endShape();
+			}, transientTransforms);
 		}
 	}
-
 
 	/**
 	 * Draw a dot at the given coordinates. This is different from a circle in
 	 * that the size of the circle does not scale, so it is always the portion
 	 * of the layers.
-	 *
-	 * @param x
-	 * @param y
-	 * @param transforms
-	 * @param color
-	 * @param size
-	 * @param layers
 	 */
-	public void dot(float x, float y, float radius, Painter painter, Queue<Transformation> transforms) {
+	public void dot(float x, float y, float radius, Painter painter, List<Transformation> transforms) {
 		ellipse(x, y, radius / scale, radius / scale, painter, transforms);
 	}
 
-	public void dot(Vector2D v, float radius, Painter painter, Queue<Transformation> transforms) {
+	public void dot(Vector2D v, float radius, Painter painter, List<Transformation> transforms) {
 		dot((float) v.x(), (float) v.y(), radius, painter, transforms);
 	}
 
@@ -146,20 +151,14 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	 */
 	@Override
 	public void circle(float x, float y, float radius, Painter painter) {
-		ellipse(x, y, (2 * radius), (2 * radius), painter, null);
+		ellipse(x, y, (2 * radius), (2 * radius), painter, noTransforms);
 	}
+
 
 	@Override
-	public void quad(Vector2D v1, Vector2D v2, Vector2D v3, Vector2D v4, Painter painter) {
-		quad((float) v1.x(), (float) v1.y(), (float) v2.x(), (float) v2.y(), (float) v3.x(), (float) v3.y(),
-				(float) v4.x(), (float) v4.y(), painter);
-	}
-
 	public void drawPath(List<Vector2D> points, Painter painter) {
-		drawPath(points, painter, null);
+		drawPath(points, painter, noTransforms);
 	}
-
-
 
 	@Override
 	public void clear() {
@@ -210,27 +209,9 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 
 	@Override
 	public void handleNewFrame() {
-		translate(centerX * width, centerY * height);
-		rotate(rotation);
-		scale(scale);
-	}
-
-	private void translate(double x, double y) {
-
-		layer.translate((float) x, (float) y);
-
-	}
-
-	private void rotate(double angle) {
-
-		layer.rotate((float) angle);
-
-	}
-
-	private void scale(double scale) {
-
-		layer.scale((float) scale);
-
+		layer.translate(centerX * width, centerY * height);
+		layer.rotate(rotation);
+		layer.scale(scale);
 	}
 
 	@Override
@@ -260,8 +241,8 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	}
 
 	@Override
-	public String toString() {
-		return String.format("Layer (%d x %d) ", getWidth(), getHeight());
+	public float getScale() {
+		return scale;
 	}
 
 	private int pushedTransientTransformationsCount = 0;
@@ -272,7 +253,7 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	 * @param layers
 	 * @param transientTransforms
 	 */
-	private void pushTransientTransformations(PGraphics layer, Queue<Transformation> transientTransforms) {
+	private void pushTransientTransformations(PGraphics layer, List<Transformation> transientTransforms) {
 		checkNotNull(transientTransforms, "transforms were null");
 		checkState(pushedTransientTransformationsCount == 0, "There must be no pushed transformations, but instead there were %s", pushedTransientTransformationsCount);
 
@@ -284,9 +265,7 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 	}
 
 	/**
-	 * Unsets the short-term transformations.
-	 *
-	 * @param layers
+	 * Un-set the short-term transformations.
 	 */
 	private void popTransientTransformations(PGraphics layer) {
 		checkState(pushedTransientTransformationsCount == 1, "There must be one pushed transformations, but instead there were %s", pushedTransientTransformationsCount);
@@ -307,7 +286,7 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 
 	@Override
 	public void dot(float x, float y, float radius, Painter painter) {
-		dot(x, y, radius, painter, null);
+		dot(x, y, radius, painter, noTransforms);
 	}
 
 	@Override
@@ -315,9 +294,15 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 		dot((float) pos.x(), (float) pos.y(), radius, painter);
 	}
 
-	@Override
-	public double getScale() {
-		return scale;
+
+	private interface Drawer {
+		void draw();
+	}
+
+	private void drawWithTransformations(Drawer drawer, List<Transformation> transforms) {
+		pushTransientTransformations(layer, transforms);
+		drawer.draw();
+		popTransientTransformations(layer);
 	}
 
 	private void applyTransform(Transformation transformation) {
@@ -342,5 +327,9 @@ public class PGraphicsCanvas implements Layer<PGraphics> {
 
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Layer(%d x %d){scale=%.2f, rotation=%.2f}", width, height, scale, rotation);
+	}
 
 }
