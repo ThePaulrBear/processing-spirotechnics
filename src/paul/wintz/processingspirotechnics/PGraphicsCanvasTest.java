@@ -7,13 +7,15 @@ import org.junit.*;
 import static org.junit.Assert.assertEquals;
 
 import paul.wintz.canvas.Painter;
+import paul.wintz.math.Vector2D;
+import paul.wintz.processing.*;
 import processing.core.*;
 
 public class PGraphicsCanvasTest {
 
 	private static TestPApplet testPApplet;
 
-	private PGraphicsCanvas canvas;
+	private PGraphicsLayer canvas;
 	private final Random random = new Random();
 	private final Painter painter = new Painter();
 
@@ -35,7 +37,7 @@ public class PGraphicsCanvasTest {
 
 			while(!ProcessingUtils.isInititialized()){
 				//wait for the testPapplet to initialize
-				Thread.sleep(5);
+				Thread.sleep(50);
 				System.out.println("Waiting to initialize ProcessingUtils");
 			}
 		}
@@ -47,7 +49,7 @@ public class PGraphicsCanvasTest {
 			TestPApplet.run();
 		}
 
-		canvas = new PGraphicsCanvas(40, 50);
+		canvas = new PGraphicsLayer(40, 50);
 	}
 
 	@After
@@ -59,7 +61,7 @@ public class PGraphicsCanvasTest {
 	public final void testPGraphicsCanvas() {
 		final int width = 40;
 		final int height = 50;
-		final PGraphicsCanvas newCanvas = new PGraphicsCanvas(width, height);
+		final PGraphicsLayer newCanvas = new PGraphicsLayer(width, height);
 		newCanvas.clear();
 		assertEquals(width, newCanvas.getWidth());
 		assertEquals(height, newCanvas.getHeight());
@@ -132,7 +134,7 @@ public class PGraphicsCanvasTest {
 		for(int i = 1; i < 12; i++){
 			final int width = 1 + random.nextInt(40);
 			final int height = 1 + random.nextInt(40);
-			new PGraphicsCanvas(width, height).getImage();
+			new PGraphicsLayer(width, height).getImage();
 		}
 	}
 
@@ -179,16 +181,12 @@ public class PGraphicsCanvasTest {
 	public final void testQuad() {
 		for(int i = 0; i < 100; i++){
 
-			final float x1 = random.nextFloat();
-			final float y1 = random.nextFloat();
-			final float x2 = random.nextFloat();
-			final float y2 = random.nextFloat();
-			final float x3 = random.nextFloat();
-			final float y3 = random.nextFloat();
-			final float x4 = random.nextFloat();
-			final float y4 = random.nextFloat();
+			Vector2D v1 = new Vector2D(random.nextFloat(), random.nextFloat());
+			Vector2D v2 = new Vector2D(random.nextFloat(), random.nextFloat());
+			Vector2D v3 = new Vector2D(random.nextFloat(), random.nextFloat());
+			Vector2D v4 = new Vector2D(random.nextFloat(), random.nextFloat());
 
-			canvas.quad(x1, y1, x2, y2, x3, y3, x4, y4, painter);
+			canvas.quad(v1, v2, v3, v4, painter);
 		}
 	}
 
@@ -227,7 +225,7 @@ public class PGraphicsCanvasTest {
 	//		fail("Not yet implemented"); // TODO implement test case
 	//	}
 
-	private static void assertSize(int expectedWidth, int expectedHeight, PGraphicsCanvas canvas){
+	private static void assertSize(int expectedWidth, int expectedHeight, PGraphicsLayer canvas){
 		assertEquals(expectedWidth, canvas.getWidth());
 		assertEquals(expectedHeight, canvas.getHeight());
 	}

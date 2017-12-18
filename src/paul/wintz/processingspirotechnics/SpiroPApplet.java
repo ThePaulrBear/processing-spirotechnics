@@ -1,6 +1,7 @@
 package paul.wintz.processingspirotechnics;
 
 import paul.wintz.parametricequationdrawer.*;
+import paul.wintz.processing.ProcessingUtils;
 import paul.wintz.utils.Toast;
 import paul.wintz.utils.logging.*;
 import processing.core.*;

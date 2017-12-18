@@ -12,7 +12,7 @@ import java.util.List;
 
 import paul.wintz.canvas.*;
 import paul.wintz.parametricequationdrawer.*;
-import paul.wintz.spirotechnics.*;
+import paul.wintz.processing.*;
 import paul.wintz.spirotechnics.userinterface.swinggui.OptionsJFrame;
 import paul.wintz.utils.logging.Lg;
 import processing.core.*;
@@ -66,7 +66,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 	private static final class PGraphicsLayerFactory implements LayerFactory<PGraphics> {
 		@Override
 		public Layer<PGraphics> makeLayer(int width, int height) {
-			return new PGraphicsCanvas(width, width);
+			return new PGraphicsLayer(width, width);
 		}
 	}
 
