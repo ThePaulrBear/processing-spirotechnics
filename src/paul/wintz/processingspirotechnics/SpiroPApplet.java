@@ -9,7 +9,7 @@ import processing.core.*;
 public class SpiroPApplet extends PApplet {
 	private SpirotechnicMain<?> manager;
 
-	private final SpirotechnicInfoDrawer infoDrawer = new SpirotechnicInfoDrawer();
+	private final MetadataDrawer metadataDrawer = new MetadataDrawer(this);
 
 	private ProcessingToaster toaster;
 
@@ -43,94 +43,15 @@ public class SpiroPApplet extends PApplet {
 
 	@Override
 	public void draw() {
-
-		// clear the PApplet window
 		this.background(50);
-
 		manager.doFrame();
-
-		drawText();
-
+		metadataDrawer.drawMetadata();
 		toaster.display();
 	}
 
 	@Override
 	public void keyPressed() {
 		// manager.getUserInterface().keyPressed(key, keyCode);
-	}
-
-	void drawText() {
-		// final int divisions = 25;
-		// SampleLine sampleLine = colorManager.getSampleLine(divisions);
-		// // DRAW COLOR BARS BENEATH TEXT
-		// for (int j = 0; j < divisions; j++) {
-		// strokeWeight(sampleLine.getThicknesses(j));
-		// stroke(sampleLine.getColors(j));
-		//
-		// float barLength= 100;
-		// float segmentLength = barLength / divisions;
-		// float y = textOrginY + (float) (- 1) * textSpacing + 5;
-		// float x = textOrginX + j * segmentLength;
-		// for (int f = 0; f < manager.getDrawingManager().getCyclesToDraw();
-		// f++)
-		// line(x, y, x + segmentLength, y);
-		// }
-		infoDrawer.draw();
-
-	}
-
-	private class SpirotechnicInfoDrawer {
-		final int x = 5;
-		final int textSize = 12;
-
-		public void draw() {
-			// text settings
-
-			//			textSize(textSize);
-			//			textAlign(PConstants.LEFT, PConstants.TOP);
-			//
-			//			final List<ConditionStringPair> conditionStrings = manager.getConditionedStrings();
-			//
-			//			int lineNumber = 0;
-			//			for (final ConditionStringPair pair : conditionStrings) {
-			//
-			//				switch (pair.getCondition()) {
-			//				case DRAWING:
-			//					fill(255);
-			//					break;
-			//				case INVSIBLE:
-			//					fill(0);
-			//					break;
-			//				case VISIBLE:
-			//					fill(180);
-			//					break;
-			//				}
-			//
-			//				for (final String s : pair.getText().split("\n")) {
-			//					text(s, x, upperY(lineNumber));
-			//
-			//					lineNumber++;
-			//				}
-			//				lineNumber++;
-			//			}
-			//
-			//			fill(255); // Make text white again!
-			//			final List<String> lowerText = new ArrayList<>();//manager.getInfo();
-			//			lowerText.add(0, "frameRate: " + round(frameRate) + " fps");
-			//
-			//			for (int i = 1; i <= lowerText.size(); i++) {
-			//				text(lowerText.get(lowerText.size() - i), x, lowerY(i));
-			//			}
-		}
-
-		private int upperY(int line) {
-			return (1 + line) * (textSize + 2);
-		}
-
-		private int lowerY(int line) {
-			return height - (line + 1) * (textSize + 2);
-		}
-
 	}
 
 	private final class ProcessingToaster implements Toast.Toaster {
@@ -163,12 +84,9 @@ public class SpiroPApplet extends PApplet {
 			fill(255, alpha);
 			text(message, x, y);
 		}
-
 	}
 
-	/**
-	 * Save the screen at closing.
-	 */
+	//Save the screen at closing.
 	@Override
 	public void dispose() {
 		save("ImageEnd.png");
