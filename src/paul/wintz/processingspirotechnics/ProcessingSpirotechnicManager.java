@@ -38,7 +38,11 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 		EventQueue.invokeLater(() -> {
 
 			try {
-				frame = new OptionsJFrame(getOptionsTree());
+				frame = new OptionsJFrame();
+				frame.addTab(getUserInterface().getDrawerController());
+				frame.addTab(getUserInterface().getAnimationController());
+				frame.addTab(getUserInterface().getCanvasController());
+
 				frame.setVisible(true);
 				frame.addWindowListener(new java.awt.event.WindowAdapter() {
 

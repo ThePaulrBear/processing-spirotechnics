@@ -1,13 +1,11 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import java.awt.CardLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import paul.wintz.uioptiontypes.*;
+import paul.wintz.uioptiontypes.OptionGroup;
 import paul.wintz.utils.logging.Lg;
 
 @SuppressWarnings("serial")
@@ -16,18 +14,14 @@ public class OptionsJFrame extends JFrame {
 
 	private final JPanel contentPane = createContentPane();
 
-	public OptionsJFrame(OptionGroup optionGroup) {
+	private JTabbedPane tabbedPane;
+
+	public OptionsJFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 700);
 
-		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane);
-
-		// Each top level tab will have it's own tab
-		for (final OptionItem group : optionGroup) {
-			checkState(group instanceof OptionGroup);
-			new TabOptionsGroupPanel(contentPane, tabbedPane, (OptionGroup) group);
-		}
 	}
 
 	private JPanel createContentPane() {
@@ -36,6 +30,10 @@ public class OptionsJFrame extends JFrame {
 		pane.setLayout(new CardLayout(0, 0));
 		setContentPane(pane);
 		return pane;
+	}
+
+	public void addTab(OptionGroup optionGroup) {
+		new TabOptionsGroupPanel(contentPane, tabbedPane, optionGroup);
 	}
 
 }
