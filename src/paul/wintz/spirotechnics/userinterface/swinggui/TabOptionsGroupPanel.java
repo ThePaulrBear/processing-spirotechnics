@@ -57,6 +57,8 @@ class TabOptionsGroupPanel extends JPanel {
 			new FractionOptionPanel(this, (FractionOption) opt);
 		} else if (opt instanceof ListOption<?>) {
 			new ListOptionPanel<>(this, (ListOption<?>) opt);
+		} else if (opt instanceof FileOption) {
+			new FileOptionPanel(this, (FileOption) opt);
 		} else {
 			Lg.e(TAG, "Option not supported by GUI: " + opt.getClass().getSimpleName());
 		}

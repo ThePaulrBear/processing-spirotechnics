@@ -67,6 +67,8 @@ abstract class OptionPanel<T extends UserInputOption<?>> extends JPanel {
 			return new EventButtonPanel(parent, (EventOption) option);
 		if (option instanceof ListOption<?>)
 			return new ListOptionPanel<>(parent, (ListOption<?>) option);
+		if (option instanceof FileOption)
+			return new FileOptionPanel(parent, (FileOption) option);
 
 		throw new UnhandledCaseException(option.getClass());
 	}
