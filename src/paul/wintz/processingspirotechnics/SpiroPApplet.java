@@ -1,6 +1,8 @@
 package paul.wintz.processingspirotechnics;
 
-import paul.wintz.parametricequationdrawer.*;
+import static paul.wintz.parametricequationdrawer.InitialValues.*;
+
+import paul.wintz.parametricequationdrawer.SpirotechnicMain;
 import paul.wintz.processing.ProcessingUtils;
 import paul.wintz.utils.Toast;
 import paul.wintz.utils.logging.*;
@@ -25,16 +27,17 @@ public class SpiroPApplet extends PApplet {
 
 	@Override
 	public void settings() {
-		size(InitialValues.INITIAL_WINDOW_WIDTH, InitialValues.INITIAL_WINDOW_HEIGHT, FX2D);
+		size(INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT, FX2D);
 		smooth(8);
 	}
 
 	@Override
 	public void setup() {
 
-		frameRate(InitialValues.TARGET_FRAME_RATE);
+		frameRate(TARGET_FRAME_RATE);
 
-		Toast.setToaster(toaster = new ProcessingToaster());
+		toaster = new ProcessingToaster();
+		Toast.setToaster(toaster);
 
 		ProcessingUtils.initialize(this);
 

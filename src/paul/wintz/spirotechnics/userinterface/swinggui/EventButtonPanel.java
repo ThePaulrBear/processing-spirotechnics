@@ -23,7 +23,7 @@ class EventButtonPanel extends OptionPanel<EventOption> {
 			addChangeListener(event -> {
 				if(getModel().isPressed()) {
 					option.triggerEvent();
-				};
+				}
 			});
 		}
 	}

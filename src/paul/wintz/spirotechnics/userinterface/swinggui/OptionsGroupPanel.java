@@ -1,5 +1,7 @@
 package paul.wintz.spirotechnics.userinterface.swinggui;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.awt.Dimension;
 
 import javax.swing.*;
@@ -38,14 +40,13 @@ class OptionsGroupPanel extends JPanel {
 	}
 
 	public void add(OptionItem o) {
+		checkNotNull(o);
 
 		if (o instanceof OptionGroup) {
 			new OptionsGroupPanel(this, (OptionGroup) o);
-		} else if(o instanceof UserInputOption){
+		} else if(o instanceof UserInputOption) {
 			OptionPanel.makeOptionPanel((UserInputOption<?>) o, this);
-		} else if(o == null)
-			throw new NullPointerException();
-		else
+		} else
 			throw new ClassCastException("Wrong type: " + this);
 
 	}

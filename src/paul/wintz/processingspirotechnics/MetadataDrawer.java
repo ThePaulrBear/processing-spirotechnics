@@ -91,6 +91,14 @@ public class MetadataDrawer {
 
 	}
 
+	public static class ColoredString {
+		public ColoredString(String text, int color) {
+			this.text = text;
+			this.color = color;
+		}
 
+		public String text;
+		public int color;
+	}
 
 }
