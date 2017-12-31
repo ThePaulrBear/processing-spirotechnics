@@ -72,6 +72,11 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 		public Layer<PGraphics> makeLayer(int width, int height) {
 			return new PGraphicsLayer(width, width);
 		}
+
+		@Override
+		public Layer<PGraphics> makeLayer(int size) {
+			return new PGraphicsLayer(size, size);
+		}
 	}
 
 	private static final class MyLayerCompositor implements ImageCompositor<PGraphics> {
