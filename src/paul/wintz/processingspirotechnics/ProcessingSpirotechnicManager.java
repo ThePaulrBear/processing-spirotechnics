@@ -7,7 +7,7 @@ import static paul.wintz.utils.logging.Lg.makeTAG;
 
 import java.awt.EventQueue;
 import java.awt.event.WindowEvent;
-import java.io.File;
+import java.io.*;
 import java.util.List;
 
 import paul.wintz.canvas.*;
@@ -27,6 +27,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 				new PGraphicsLayerFactory(),
 				new PGraphicsToPAppletDisplayer(pApplet),
 				new MyLayerCompositor(),
+				new PGraphicsImageSaver(),
 				new ProcessingGifRecording());
 		this.pApplet = pApplet;
 
@@ -79,16 +80,17 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 		}
 	}
 
-	private static final class MyLayerCompositor implements ImageCompositor<PGraphics> {
+	//TODO: Rename
+	private static final class MyLayerCompositor implements ParametricEquationDrawer.ImageCompositor<PGraphics> {
 
 		final PGraphics base = ProcessingUtils.createPGraphics(1, 1);
 
 		@Override
-		public PGraphics createCompositeImage(List<Layer<PGraphics>> list) {
+		public PGraphics compositeLayers(List<Layer<PGraphics>> layers) {
 
-			base.setSize(list.get(0).getWidth(), list.get(0).getHeight());
+			base.setSize(layers.get(0).getWidth(), layers.get(0).getHeight());
 			base.beginDraw();
-			for (final Layer<PGraphics> layer : list) {
+			for (final Layer<PGraphics> layer : layers) {
 				layer.drawOnto(base);
 			}
 			base.endDraw();
@@ -186,6 +188,19 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 			Lg.i(TAG, "fps set to " + fps);
 			this.fps = fps;
 		}
+	}
+
+	private static class PGraphicsImageSaver implements ImageSaver<PGraphics> {
+
+		@Override
+		public File save(PGraphics image) throws IOException  {
+			File tempFile = File.createTempFile("spirotechnic", ".png");
+			Lg.d(TAG, "File saving to: " + tempFile);
+			tempFile.deleteOnExit();
+			image.save(tempFile.getAbsolutePath());
+			return tempFile;
+		}
+
 	}
 
 
