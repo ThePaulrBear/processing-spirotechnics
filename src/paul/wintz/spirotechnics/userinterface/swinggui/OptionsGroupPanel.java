@@ -51,19 +51,19 @@ class OptionsGroupPanel extends JPanel {
 
 	}
 
-	/**
-	 *
-	 * @param afterNdx
-	 *            the first item to delete/replace
-	 */
 	private void refreshList() {
 
 		removeAll();
+		this.add(jLabel);
 		for (final OptionItem option : optionGroup) {
 			add(option);
+			System.out.println("adding option: " + option + ", from " + optionGroup);
 		}
 
+		getParent().revalidate();
+		getParent().repaint();
 		revalidate();
+		repaint();
 	}
 
 }
