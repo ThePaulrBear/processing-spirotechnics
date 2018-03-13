@@ -29,11 +29,11 @@ public class SwingOptionsTest {
 
 	private static OptionGroup makeOptions() {
 		final OptionGroup optionList = new OptionGroup();
-		optionList.addOptions(new OptionGroup("Option Group 1",
+		optionList.addAll(new OptionGroup("Option Group 1",
 				makeTestOption(),
 				new BooleanOption(true, "Boolean Option"))
 				);
-		optionList.addOptions(new OptionGroup("Option Group 2",
+		optionList.addAll(new OptionGroup("Option Group 2",
 				makeTestOption(),
 				makeTestOption(),
 				makeTestOption(),
@@ -52,7 +52,7 @@ public class SwingOptionsTest {
 				makeTestOption(),
 				makeTestOption(),
 				makeTestOption()));
-		optionList.addOptions(new OptionGroup("Option Group 2",
+		optionList.addAll(new OptionGroup("Option Group 2",
 				makeTestOption(),
 				makeTestOption(),
 				makeTestOption(),
