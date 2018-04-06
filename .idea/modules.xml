@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Utils/PaulWintzUtils.iml" filepath="$PROJECT_DIR$/../Utils/PaulWintzUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ProcessingUtils/ProcessingUtils.iml" filepath="$PROJECT_DIR$/../ProcessingUtils/ProcessingUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../spirotechnics/Spirotechinic.iml" filepath="$PROJECT_DIR$/../spirotechnics/Spirotechinic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpirotechnicsPApplet.iml" filepath="$PROJECT_DIR$/SpirotechnicsPApplet.iml" />
+    </modules>
+  </component>
+</project>
