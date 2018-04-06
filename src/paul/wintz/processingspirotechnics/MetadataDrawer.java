@@ -25,8 +25,8 @@ public class MetadataDrawer {
 		//
 		// float barLength= 100;
 		// float segmentLength = barLength / divisions;
-		// float y = textOrginY + (float) (- 1) * textSpacing + 5;
-		// float x = textOrginX + j * segmentLength;
+		// float y = textOriginY + (float) (- 1) * textSpacing + 5;
+		// float x = textOriginX + j * segmentLength;
 		// for (int f = 0; f < manager.getDrawingManager().getCyclesToDraw();
 		// f++)
 		// line(x, y, x + segmentLength, y);
@@ -69,7 +69,7 @@ public class MetadataDrawer {
 			//				case DRAWING:
 			//					fill(255);
 			//					break;
-			//				case INVSIBLE:
+			//				case INVISIBLE:
 			//					fill(0);
 			//					break;
 			//				case VISIBLE:

@@ -19,10 +19,7 @@ public class SpiroPApplet extends PApplet {
 
 		Lg.setLogger(new JavaStdOutLogger());
 
-		final String[] pargs = { "SpiroPapplet" };
-		final SpiroPApplet sApp = new SpiroPApplet();
-
-		PApplet.runSketch(pargs, sApp);
+		PApplet.runSketch(new String[]{ "Spirotechnics" }, new SpiroPApplet());
 	}
 
 	@Override
