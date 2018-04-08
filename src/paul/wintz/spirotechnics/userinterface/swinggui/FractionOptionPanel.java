@@ -33,9 +33,6 @@ class FractionOptionPanel extends OptionPanel<FractionOption> {
 					skipZeroValue(option);
 				}
 
-				/**
-				 * @param option
-				 */
 				private void skipZeroValue(final FractionOption option) {
 					if ((int) getValue() == 0) {
 						if (option.getDenominator() < 0) {

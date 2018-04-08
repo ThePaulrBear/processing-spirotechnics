@@ -71,7 +71,7 @@ public class ProcessingSpirotechnicManager extends SpirotechnicMain<PGraphics> {
 	private static final class PGraphicsLayerFactory implements LayerFactory<PGraphics> {
 		@Override
 		public Layer<PGraphics> makeLayer(int width, int height) {
-			return new PGraphicsLayer(width, width);
+			return new PGraphicsLayer(width, height);
 		}
 
 		@Override

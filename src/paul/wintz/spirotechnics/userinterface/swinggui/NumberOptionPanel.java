@@ -15,12 +15,13 @@ class NumberOptionPanel extends OptionPanel<NumberOption<?>> {
 	}
 
 	private class NumberOptionSpinner<N extends Number> extends JSpinner {
-		public NumberOptionSpinner(final NumberOption<N> option) {
+		NumberOptionSpinner(final NumberOption<N> option) {
 			setValue(option.getValue());
 			updateLabel();
 
 			addChangeListener(pass -> {
 
+				//noinspection unchecked We enforce that only N is put into value
 				N newValue = (N) getValue();
 				if(option.isValidValue(newValue)) {
 					option.setValue(newValue);
@@ -30,15 +31,17 @@ class NumberOptionPanel extends OptionPanel<NumberOption<?>> {
 				}
 			});
 
-			option.addOnValueChangedListener(newValue -> {
-				setValue(newValue);
-				updateLabel();
-			});
+			option.addOnValueChangedListener(this::onValueChanged);
+		}
+
+		private void onValueChanged(N newValue) {
+			setValue(newValue);
+			updateLabel();
 		}
 	}
 
 	private class OptionSlider extends JSlider {
-		public OptionSlider(final FloatOption option) {
+		OptionSlider(final FloatOption option) {
 			setMaximum((int) (100 * option.getMax()));
 			setMinimum((int) (100 * option.getMin()));
 
@@ -49,9 +52,7 @@ class NumberOptionPanel extends OptionPanel<NumberOption<?>> {
 			}
 			setUiValue(option.getValue());
 
-			addChangeListener(arg0 -> {
-				setEntityValue(option);
-			});
+			addChangeListener(arg0 -> setEntityValue(option));
 
 			option.addOnValueChangedListener(this::setUiValue);
 		}

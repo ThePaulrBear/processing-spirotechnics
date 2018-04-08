@@ -17,7 +17,7 @@ public class OptionsJFrame extends JFrame {
 	private JTabbedPane tabbedPane;
 
 	public OptionsJFrame() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 700);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
