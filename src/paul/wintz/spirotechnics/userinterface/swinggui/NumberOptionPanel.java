@@ -10,78 +10,78 @@ import paul.wintz.uioptiontypes.integers.NumberOption;
 @SuppressWarnings("serial")
 class NumberOptionPanel extends OptionPanel<NumberOption<?>> {
 
-	NumberOptionPanel(JPanel parentPanel, NumberOption<?> option) {
-		super(checkNotNull(parentPanel), checkNotNull(option));
-	}
+    NumberOptionPanel(JPanel parentPanel, NumberOption<?> option) {
+        super(checkNotNull(parentPanel), checkNotNull(option));
+    }
 
-	private class NumberOptionSpinner<N extends Number> extends JSpinner {
-		NumberOptionSpinner(final NumberOption<N> option) {
-			setValue(option.getValue());
-			updateLabel();
+    private class NumberOptionSpinner<N extends Number> extends JSpinner {
+        NumberOptionSpinner(final NumberOption<N> option) {
+            setValue(option.getValue());
+            updateLabel();
 
-			addChangeListener(pass -> {
+            addChangeListener(pass -> {
 
-				//noinspection unchecked We enforce that only N is put into value
-				N newValue = (N) getValue();
-				if(option.isValidValue(newValue)) {
-					option.setValue(newValue);
-					updateLabel();
-				} else {
-					label.setText(option.getDescription() + ": value not valid");
-				}
-			});
+                //noinspection unchecked We enforce that only N is put into value
+                N newValue = (N) getValue();
+                if(option.isValidValue(newValue)) {
+                    option.setValue(newValue);
+                    updateLabel();
+                } else {
+                    label.setText(option.getDescription() + ": value not valid");
+                }
+            });
 
-			option.addOnValueChangedListener(this::onValueChanged);
-		}
+            option.addOnValueChangedListener(this::onValueChanged);
+        }
 
-		private void onValueChanged(N newValue) {
-			setValue(newValue);
-			updateLabel();
-		}
-	}
+        private void onValueChanged(N newValue) {
+            setValue(newValue);
+            updateLabel();
+        }
+    }
 
-	private class OptionSlider extends JSlider {
-		OptionSlider(final FloatOption option) {
-			setMaximum((int) (100 * option.getMax()));
-			setMinimum((int) (100 * option.getMin()));
+    private class OptionSlider extends JSlider {
+        OptionSlider(final FloatOption option) {
+            setMaximum((int) (100 * option.getMax()));
+            setMinimum((int) (100 * option.getMin()));
 
-			if (16 < 15) {
-				setPaintTicks(true);
-				setMinorTickSpacing(1);
-				setSnapToTicks(true);
-			}
-			setUiValue(option.getValue());
+            if (16 < 15) {
+                setPaintTicks(true);
+                setMinorTickSpacing(1);
+                setSnapToTicks(true);
+            }
+            setUiValue(option.getValue());
 
-			addChangeListener(arg0 -> setEntityValue(option));
+            addChangeListener(arg0 -> setEntityValue(option));
 
-			option.addOnValueChangedListener(this::setUiValue);
-		}
+            option.addOnValueChangedListener(this::setUiValue);
+        }
 
-		private void setEntityValue(final FloatOption option) {
-			float newValue = 0.01f * getValue();
-			if(option.isValidValue(newValue)) {
-				option.setValue(newValue);
-				updateLabelWithValue();
-			} else {
-				label.setText(option.getDescription() + ": value not valid");
-			}
-		}
+        private void setEntityValue(final FloatOption option) {
+            float newValue = 0.01f * getValue();
+            if(option.isValidValue(newValue)) {
+                option.setValue(newValue);
+                updateLabelWithValue();
+            } else {
+                label.setText(option.getDescription() + ": value not valid");
+            }
+        }
 
-		private void setUiValue(Float value) {
-			setValue((int) (100 * value));
-			updateLabelWithValue();
-		}
-	}
+        private void setUiValue(Float value) {
+            setValue((int) (100 * value));
+            updateLabelWithValue();
+        }
+    }
 
-	@Override
-	protected void createControl() {
-		if(option instanceof FloatOption) {
-			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			this.add(new OptionSlider((FloatOption) option));
-		} else {
-			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			this.add(new NumberOptionSpinner<>(option));
-		}
-	}
+    @Override
+    protected void createControl() {
+        if(option instanceof FloatOption) {
+            this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            this.add(new OptionSlider((FloatOption) option));
+        } else {
+            this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+            this.add(new NumberOptionSpinner<>(option));
+        }
+    }
 
 }

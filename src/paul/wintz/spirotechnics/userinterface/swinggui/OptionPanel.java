@@ -13,64 +13,64 @@ import paul.wintz.utils.exceptions.UnhandledCaseException;
 
 @SuppressWarnings("serial")
 abstract class OptionPanel<T extends UserInputOption<?>> extends JPanel {
-	protected final T option;
+    protected final T option;
 
-	protected JLabel label;
+    protected JLabel label;
 
-	OptionPanel(JPanel parentPanel, T option) {
-		this.option = checkNotNull(option);
+    OptionPanel(JPanel parentPanel, T option) {
+        this.option = checkNotNull(option);
 
-		parentPanel.add(this);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        parentPanel.add(this);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		createLabel();
-		updateLabel();
-		createControl();
+        createLabel();
+        updateLabel();
+        createControl();
 
-		final Component spacer = Box.createVerticalStrut(10);
-		this.add(spacer);
-	}
+        final Component spacer = Box.createVerticalStrut(10);
+        this.add(spacer);
+    }
 
-	protected void createLabel() {
-		label = new JLabel(option.getDescription());
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setAlignmentX(CENTER_ALIGNMENT);
-		label.setMinimumSize(new Dimension(3000, 0));
-		this.add(label);
-	}
+    protected void createLabel() {
+        label = new JLabel(option.getDescription());
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setAlignmentX(CENTER_ALIGNMENT);
+        label.setMinimumSize(new Dimension(3000, 0));
+        this.add(label);
+    }
 
-	protected abstract void createControl();
+    protected abstract void createControl();
 
-	protected void updateLabel() {
-		label.setText(option.getDescription());
-	}
+    protected void updateLabel() {
+        label.setText(option.getDescription());
+    }
 
-	protected void updateLabelWithValue() {
-		final StringBuilder sb = new StringBuilder(option.getDescription());
-		if (option.getValue() != null) {
-			sb.append(": ").append(option.getValue());
-		}
-		label.setText(sb.toString());
-	}
+    protected void updateLabelWithValue() {
+        final StringBuilder sb = new StringBuilder(option.getDescription());
+        if (option.getValue() != null) {
+            sb.append(": ").append(option.getValue());
+        }
+        label.setText(sb.toString());
+    }
 
-	public static OptionPanel<?> makeOptionPanel(UserInputOption<?> option, OptionsGroupPanel parent) {
-		checkNotNull(option, "Option was null");
-		checkNotNull(parent, "Parent panel was null");
+    public static OptionPanel<?> makeOptionPanel(UserInputOption<?> option, OptionsGroupPanel parent) {
+        checkNotNull(option, "Option was null");
+        checkNotNull(parent, "Parent panel was null");
 
-		if (option instanceof NumberOption)
-			return new NumberOptionPanel(parent, (NumberOption<?>) option);
-		if (option instanceof BooleanOption)
-			return new ToggleOptionPanel(parent, (BooleanOption) option);
-		if (option instanceof FractionOption)
-			return new FractionOptionPanel(parent, (FractionOption) option);
-		if (option instanceof EventOption)
-			return new EventButtonPanel(parent, (EventOption) option);
-		if (option instanceof ListOption<?>)
-			return new ListOptionPanel<>(parent, (ListOption<?>) option);
-		if (option instanceof FileOption)
-			return new FileOptionPanel(parent, (FileOption) option);
+        if (option instanceof NumberOption)
+            return new NumberOptionPanel(parent, (NumberOption<?>) option);
+        if (option instanceof BooleanOption)
+            return new ToggleOptionPanel(parent, (BooleanOption) option);
+        if (option instanceof FractionOption)
+            return new FractionOptionPanel(parent, (FractionOption) option);
+        if (option instanceof EventOption)
+            return new EventButtonPanel(parent, (EventOption) option);
+        if (option instanceof ListOption<?>)
+            return new ListOptionPanel<>(parent, (ListOption<?>) option);
+        if (option instanceof FileOption)
+            return new FileOptionPanel(parent, (FileOption) option);
 
-		throw new UnhandledCaseException(option.getClass());
-	}
+        throw new UnhandledCaseException(option.getClass());
+    }
 
 }
