@@ -48,9 +48,7 @@ public class SpiroPApplet extends PApplet {
 
             ProcessingUtils.initialize(this);
 
-            SpiroOptionsJavaFX userInterface = new SpiroOptionsJavaFX();
-
-            manager = new SpirotechnicMain<>(new ProcessingSpiroIO(this), userInterface);
+            manager = new SpirotechnicMain<>(new ProcessingSpiroIO(this), new SpiroOptionsJavaFX());
 
         } catch (Exception e) {
             Lg.e(TAG, "Failed to setup application", e);
@@ -63,7 +61,6 @@ public class SpiroPApplet extends PApplet {
     public void draw() {
         this.background(50);
         manager.doFrame();
-//        metadataDrawer.drawMetadata();
         toaster.display();
     }
 
