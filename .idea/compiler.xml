@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="PaulWintzUtils" />
+        <module name="SpiroJavaFxUI" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="PaulWintzUtils" target="1.8" />
+      <module name="SpiroJavaFxUI" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>

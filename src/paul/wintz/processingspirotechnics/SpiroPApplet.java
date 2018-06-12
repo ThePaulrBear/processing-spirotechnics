@@ -1,25 +1,35 @@
 package paul.wintz.processingspirotechnics;
 
-import static paul.wintz.parametricequationdrawer.InitialValues.*;
-
 import paul.wintz.parametricequationdrawer.SpirotechnicMain;
 import paul.wintz.processing.ProcessingUtils;
 import paul.wintz.utils.Toast;
-import paul.wintz.utils.logging.*;
-import processing.core.*;
+import paul.wintz.utils.logging.JavaStdOutLogger;
+import paul.wintz.utils.logging.Lg;
+import processing.core.PApplet;
+import paul.wintz.parametricequationdrawer.controllers.javafx.SpiroOptionsJavaFX;
+
+import static paul.wintz.parametricequationdrawer.InitialValues.*;
 
 public class SpiroPApplet extends PApplet {
+    private static final String TAG = Lg.makeTAG(SpiroPApplet.class);
+
     private SpirotechnicMain<?> manager;
-
-    private final MetadataDrawer metadataDrawer = new MetadataDrawer(this);
-
     private ProcessingToaster toaster;
 
+    private static SpiroPApplet pApplet = new SpiroPApplet();
+
     public static void main(String[] args) {
-
         Lg.setLogger(new JavaStdOutLogger());
+        PApplet.runSketch(new String[]{ "Spirotechnics" }, pApplet);
+        Lg.d(TAG, "Launching app");
 
-        PApplet.runSketch(new String[]{ "Spirotechnics" }, new SpiroPApplet());
+        pApplet.setCloseListener(SpiroPApplet::cleanup);
+    }
+
+    private static void cleanup(){
+        if(pApplet != null ){
+            pApplet.exitActual();
+        }
     }
 
     @Override
@@ -30,60 +40,47 @@ public class SpiroPApplet extends PApplet {
 
     @Override
     public void setup() {
+        try {
+            frameRate(TARGET_FRAME_RATE);
 
-        frameRate(TARGET_FRAME_RATE);
+            toaster = new ProcessingToaster(this);
+            Toast.setToaster(toaster);
 
-        toaster = new ProcessingToaster();
-        Toast.setToaster(toaster);
+            ProcessingUtils.initialize(this);
 
-        ProcessingUtils.initialize(this);
+            SpiroOptionsJavaFX userInterface = new SpiroOptionsJavaFX();
 
-        manager = new ProcessingSpirotechnicManager(this);
+            manager = new SpirotechnicMain<>(new ProcessingSpiroIO(this), userInterface);
+
+        } catch (Exception e) {
+            Lg.e(TAG, "Failed to setup application", e);
+            exitActual();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void draw() {
         this.background(50);
         manager.doFrame();
-        metadataDrawer.drawMetadata();
+//        metadataDrawer.drawMetadata();
         toaster.display();
     }
 
     @Override
     public void keyPressed() {
-        // manager.getUserInterface().keyPressed(key, keyCode);
+        Toast.show("Key pressed: " + key);
     }
 
-    private final class ProcessingToaster implements Toast.Toaster {
+    interface CloseListener {
+        void onClose();
+    }
 
-        private String message = "";
-        private int framesSinceKeyPress;
+    private CloseListener closeListener = () -> {};
 
-        @Override
-        public void show(String message) {
-            framesSinceKeyPress = 0;
-            this.message = message;
-        }
-
-        public void display() {
-            framesSinceKeyPress++;
-
-            textAlign(PConstants.CENTER, PConstants.BOTTOM);
-            textSize(24);
-
-            // TODO: Make these calculations more structured
-            final int alpha = 255 - 3 * framesSinceKeyPress;
-            final int x = width / 2;
-            final int y = height - 30;
-
-            // draw Shadow
-            fill(0, alpha);
-            text(message, x + 2.0f, y + 2.0f);
-
-            // drawText
-            fill(255, alpha);
-            text(message, x, y);
-        }
+    @SuppressWarnings("WeakerAccess")
+    public void setCloseListener(CloseListener closeListener) {
+        this.closeListener = closeListener;
     }
 
     //Save the screen at closing.
@@ -92,5 +89,7 @@ public class SpiroPApplet extends PApplet {
         save("ImageEnd.png");
 
         manager.close();
+        closeListener.onClose();
     }
+
 }

@@ -15,6 +15,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/.settings" />
+      <excludeFolder url="file://$MODULE_DIR$/src/paul/wintz/spirotechnics/userinterface/swinggui" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
@@ -42,5 +43,6 @@
     <orderEntry type="module" module-name="Spirotechinic" />
     <orderEntry type="module" module-name="ProcessingUtils" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:2.0.1" level="project" />
+    <orderEntry type="module" module-name="SpiroJavaFxUI" />
   </component>
 </module>

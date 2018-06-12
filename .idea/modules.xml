@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../Utils/PaulWintzUtils.iml" filepath="$PROJECT_DIR$/../Utils/PaulWintzUtils.iml" />
       <module fileurl="file://$PROJECT_DIR$/../ProcessingUtils/ProcessingUtils.iml" filepath="$PROJECT_DIR$/../ProcessingUtils/ProcessingUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../SpiroJavaFxUI/SpiroJavaFxUI.iml" filepath="$PROJECT_DIR$/../SpiroJavaFxUI/SpiroJavaFxUI.iml" />
       <module fileurl="file://$PROJECT_DIR$/../spirotechnics/Spirotechinic.iml" filepath="$PROJECT_DIR$/../spirotechnics/Spirotechinic.iml" />
       <module fileurl="file://$PROJECT_DIR$/SpirotechnicsPApplet.iml" filepath="$PROJECT_DIR$/SpirotechnicsPApplet.iml" />
     </modules>
