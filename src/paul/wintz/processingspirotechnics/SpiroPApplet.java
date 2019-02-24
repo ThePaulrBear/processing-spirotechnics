@@ -1,6 +1,7 @@
 package paul.wintz.processingspirotechnics;
 
-import paul.wintz.parametricequationdrawer.SpirotechnicMain;
+import paul.wintz.parametricequationdrawer.MainPresenter;
+import paul.wintz.processing.ProcessingToaster;
 import paul.wintz.processing.ProcessingUtils;
 import paul.wintz.utils.Toast;
 import paul.wintz.utils.logging.JavaStdOutLogger;
@@ -13,7 +14,7 @@ import static paul.wintz.parametricequationdrawer.InitialValues.*;
 public class SpiroPApplet extends PApplet {
     private static final String TAG = Lg.makeTAG(SpiroPApplet.class);
 
-    private SpirotechnicMain<?> manager;
+    private MainPresenter<?> manager;
     private ProcessingToaster toaster;
 
     private static SpiroPApplet pApplet = new SpiroPApplet();
@@ -21,8 +22,6 @@ public class SpiroPApplet extends PApplet {
     public static void main(String[] args) {
         Lg.setLogger(new JavaStdOutLogger());
         PApplet.runSketch(new String[]{ "Spirotechnics" }, pApplet);
-        Lg.d(TAG, "Launching app");
-
         pApplet.setCloseListener(SpiroPApplet::cleanup);
     }
 
@@ -48,10 +47,11 @@ public class SpiroPApplet extends PApplet {
 
             ProcessingUtils.initialize(this);
 
-            manager = new SpirotechnicMain<>(new ProcessingSpiroIO(this), new SpiroOptionsJavaFX());
+            SpiroOptionsJavaFX spiroOptionsJavaFX = new SpiroOptionsJavaFX();
+            manager = new MainPresenter<>(new ProcessingGraphicsIO(this), spiroOptionsJavaFX.getSpiroUserInterface());
 
         } catch (Exception e) {
-            Lg.e(TAG, "Failed to setup application", e);
+            Lg.e(TAG, "Application setup failed", e);
             exitActual();
             throw new RuntimeException(e);
         }

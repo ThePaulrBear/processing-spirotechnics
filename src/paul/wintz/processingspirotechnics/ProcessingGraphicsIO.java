@@ -1,7 +1,7 @@
 package paul.wintz.processingspirotechnics;
 
 import paul.wintz.canvas.Layer;
-import paul.wintz.parametricequationdrawer.SpiroIO;
+import paul.wintz.parametricequationdrawer.GraphicsIO;
 import paul.wintz.processing.PGraphicsLayer;
 import paul.wintz.processing.ProcessingUtils;
 import paul.wintz.utils.logging.Lg;
@@ -17,8 +17,8 @@ import static paul.wintz.parametricequationdrawer.InitialValues.SIDEBAR_WIDTH;
 import static paul.wintz.utils.Utils.checkPositive;
 import static paul.wintz.utils.logging.Lg.makeTAG;
 
-class ProcessingSpiroIO implements SpiroIO<PGraphics> {
-    private static final String TAG = makeTAG(ProcessingSpiroIO.class);
+class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
+    private static final String TAG = makeTAG(ProcessingGraphicsIO.class);
 
     private final PGraphicsLayerFactory pGraphicsLayerFactory = new PGraphicsLayerFactory();
     private final PGraphicsToPAppletDisplayer pGraphicsToPAppletDisplayer;
@@ -26,7 +26,7 @@ class ProcessingSpiroIO implements SpiroIO<PGraphics> {
     private final PGraphicsImageSaver pGraphicsImageSaver = new PGraphicsImageSaver();
     private final ProcessingGifRecording processingGifRecording = new ProcessingGifRecording();
 
-    public ProcessingSpiroIO(PApplet pApplet) {
+    ProcessingGraphicsIO(PApplet pApplet) {
         pGraphicsToPAppletDisplayer = new PGraphicsToPAppletDisplayer(pApplet);
     }
 

@@ -5,6 +5,5 @@
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../ProcessingUtils" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../Utils" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../spirotechnics" vcs="Git" />
   </component>
 </project>

@@ -40,9 +40,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:21.0" level="project" />
     <orderEntry type="module" module-name="PaulWintzUtils" />
-    <orderEntry type="module" module-name="Spirotechinic" />
     <orderEntry type="module" module-name="ProcessingUtils" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:2.0.1" level="project" />
     <orderEntry type="module" module-name="SpiroJavaFxUI" />
+    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+    <orderEntry type="module" module-name="Spirotechnic" />
   </component>
 </module>
