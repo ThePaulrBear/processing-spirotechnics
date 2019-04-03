@@ -1,13 +1,14 @@
 package paul.wintz.processingspirotechnics;
 
+import javafx.scene.canvas.Canvas;
 import paul.wintz.parametricequationdrawer.MainPresenter;
+import paul.wintz.parametricequationdrawer.controllers.javafx.SpiroOptionsJavaFX;
 import paul.wintz.processing.ProcessingToaster;
 import paul.wintz.processing.ProcessingUtils;
 import paul.wintz.utils.Toast;
 import paul.wintz.utils.logging.JavaStdOutLogger;
 import paul.wintz.utils.logging.Lg;
 import processing.core.PApplet;
-import paul.wintz.parametricequationdrawer.controllers.javafx.SpiroOptionsJavaFX;
 
 import static paul.wintz.parametricequationdrawer.InitialValues.*;
 
@@ -18,17 +19,11 @@ public class SpiroPApplet extends PApplet {
     private ProcessingToaster toaster;
 
     private static SpiroPApplet pApplet = new SpiroPApplet();
+    private static SpiroOptionsJavaFX spiroOptionsJavaFX;
 
     public static void main(String[] args) {
         Lg.setLogger(new JavaStdOutLogger());
         PApplet.runSketch(new String[]{ "Spirotechnics" }, pApplet);
-        pApplet.setCloseListener(SpiroPApplet::cleanup);
-    }
-
-    private static void cleanup(){
-        if(pApplet != null ){
-            pApplet.exitActual();
-        }
     }
 
     @Override
@@ -46,15 +41,22 @@ public class SpiroPApplet extends PApplet {
             Toast.setToaster(toaster);
 
             ProcessingUtils.initialize(this);
+            spiroOptionsJavaFX = new SpiroOptionsJavaFX();
+            spiroOptionsJavaFX.setOnCloseRequest(event -> cleanup());
 
-            SpiroOptionsJavaFX spiroOptionsJavaFX = new SpiroOptionsJavaFX();
+            // Setup the PApplet canvas to call cleanup() when it closes. This is likely to break due to implementation
+            // changes by Processing.
+            Canvas windowCanvas = (Canvas) pApplet.getSurface().getNative();
+            windowCanvas.getScene().getWindow().setOnCloseRequest(event -> cleanup());
+
             manager = new MainPresenter<>(new ProcessingGraphicsIO(this), spiroOptionsJavaFX.getSpiroUserInterface());
-
         } catch (Exception e) {
             Lg.e(TAG, "Application setup failed", e);
             exitActual();
             throw new RuntimeException(e);
         }
+
+
     }
 
     @Override
@@ -64,29 +66,23 @@ public class SpiroPApplet extends PApplet {
         toaster.display();
     }
 
+    private static void cleanup(){
+        Lg.i(TAG, "cleanup() - close pApplet canvas and javaFX controls");
+        if(pApplet != null ){
+            pApplet.save("ImageEnd.png");
+            pApplet.manager.close();
+            pApplet.exitActual();
+        } else {
+            Lg.w(TAG, "pApplet was null before cleanup!");
+        }
+        if(spiroOptionsJavaFX != null){
+            spiroOptionsJavaFX.close();
+        }
+    }
+
     @Override
     public void keyPressed() {
         Toast.show("Key pressed: " + key);
-    }
-
-    interface CloseListener {
-        void onClose();
-    }
-
-    private CloseListener closeListener = () -> {};
-
-    @SuppressWarnings("WeakerAccess")
-    public void setCloseListener(CloseListener closeListener) {
-        this.closeListener = closeListener;
-    }
-
-    //Save the screen at closing.
-    @Override
-    public void dispose() {
-        save("ImageEnd.png");
-
-        manager.close();
-        closeListener.onClose();
     }
 
 }
