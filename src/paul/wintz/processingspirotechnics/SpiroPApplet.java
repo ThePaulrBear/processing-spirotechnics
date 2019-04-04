@@ -55,8 +55,6 @@ public class SpiroPApplet extends PApplet {
             exitActual();
             throw new RuntimeException(e);
         }
-
-
     }
 
     @Override
