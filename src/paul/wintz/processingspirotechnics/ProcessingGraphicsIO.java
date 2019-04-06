@@ -51,7 +51,7 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
     }
 
     @Override
-    public AnimationRecorder<PGraphics> getAnimationRecorder() {
+    public AnimationIO<PGraphics> getAnimationRecorder() {
         return processingGifRecording;
     }
 
@@ -101,7 +101,7 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
     /**
      * Using this library: https://github.com/01010101/GifAnimation
      */
-    private static class ProcessingGifRecording implements AnimationRecorder<PGraphics> {
+    private static class ProcessingGifRecording implements AnimationIO<PGraphics> {
         private static final String TAG = makeTAG(ProcessingGifRecording.class);
 
         private gifAnimation.GifMaker gifMaker;
