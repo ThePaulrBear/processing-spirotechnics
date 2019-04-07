@@ -109,11 +109,12 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
         private float fps;
         private int framesRecorded = 0;
         private boolean isOpen = false;
+        private long BYTES_IN_MEGABYTE = 1024*1024;
 
         private void printMaxFramesToBeUnderGivenFileSize(long maxSize) {
             final double sizePerFrame = (double) file.length() / (double) framesRecorded;
             final double maxNumber = maxSize / sizePerFrame;
-            Lg.i(TAG, "The maximum number of frames is: " + maxNumber);
+            Lg.i(TAG, "The maximum number of frames is: " + maxNumber + " to fit in " + maxSize + " bytes.");
         }
 
         @Override
@@ -132,7 +133,6 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
             checkState(isOpen, "The GIF is not open");
 
             final int frameDelayInMillis = (int) (1000.0f / fps);
-            Lg.d(TAG, "delay: " + frameDelayInMillis);
             gifMaker.setDelay(frameDelayInMillis);
             gifMaker.addFrame(frame);
             framesRecorded++;
@@ -155,7 +155,7 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
             gifMaker.finish();
             Lg.i(TAG, "GIF closed. Number of frames: " + framesRecorded);
 
-            printMaxFramesToBeUnderGivenFileSize((long) 3e6);
+            printMaxFramesToBeUnderGivenFileSize(3L * BYTES_IN_MEGABYTE);
 
             gifMaker = null;
             file = null;
