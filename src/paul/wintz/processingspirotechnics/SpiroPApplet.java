@@ -37,7 +37,7 @@ public class SpiroPApplet extends PApplet {
         try {
             frameRate(TARGET_FRAME_RATE);
 
-            toaster = new ProcessingToaster(this);
+            toaster = new ProcessingToaster(this, EnglishStrings.idMap());
             Toast.setToaster(toaster);
 
             ProcessingUtils.initialize(this);
