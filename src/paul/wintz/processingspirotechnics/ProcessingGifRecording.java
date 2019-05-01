@@ -34,7 +34,6 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
         Lg.i(TAG, "Beginning GIF record to: " + file.getAbsolutePath());
         framesRecorded = 0;
 
-
         gifRecorder = new GifRecorder(500, 500);
         gifRecorder.clear();
         gifRecorder.setFile(file)

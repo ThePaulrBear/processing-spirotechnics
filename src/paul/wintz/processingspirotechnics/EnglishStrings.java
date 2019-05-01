@@ -15,6 +15,8 @@ class EnglishStrings {
             .putStringId(IMAGE_SAVED_TO, "Image saved to\n%s")
             .putStringId(FAILED_IMAGE_SAVE, "Image failed to save to\n%s")
             .putStringId(SEGMENT_COUNT_CHANGED_TO, "Segment count changed to %d")
+            .putStringId(CONTACT_CIRCLE_ROTATION_CHANGED, "Rotation Offset Circle Changed to %d")
+            .putStringId(LOADED_GRAPH, "Loaded graph:\nRadii: %s\nVelocities: %s")
             .build();
 
     static StringIdMap idMap() {
