@@ -4,3 +4,6 @@ target/
 *.gif
 *.settings
 lib
+classes
+gradle
+gradlew*

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="GifAnimation" external.linked.project.path="$MODULE_DIR$/../../../GifAnimation" external.root.project.path="$MODULE_DIR$/../../../GifAnimation" external.system.id="GRADLE" external.system.module.group="" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../GifAnimation">
+      <excludeFolder url="file://$MODULE_DIR$/../../../GifAnimation/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../GifAnimation/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../GifAnimation/examples" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../GifAnimation/library" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../GifAnimation/reference" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/EclipseWorkspace/External Jars/Processing-3.3/core.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="PaulWintzUtils" />
+  </component>
+</module>

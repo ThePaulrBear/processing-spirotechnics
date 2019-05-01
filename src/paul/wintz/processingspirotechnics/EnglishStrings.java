@@ -14,6 +14,7 @@ class EnglishStrings {
             .putStringId(FRAME_TRANISITIONER_CHANGED, "Frame transitioner changed to %s")
             .putStringId(IMAGE_SAVED_TO, "Image saved to\n%s")
             .putStringId(FAILED_IMAGE_SAVE, "Image failed to save to\n%s")
+            .putStringId(SEGMENT_COUNT_CHANGED_TO, "Segment count changed to %d")
             .build();
 
     static StringIdMap idMap() {
