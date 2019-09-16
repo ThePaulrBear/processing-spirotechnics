@@ -12,9 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkState;
-import static paul.wintz.parametricequationdrawer.InitialValues.SIDEBAR_WIDTH;
-import static paul.wintz.utils.Utils.checkPositive;
 import static paul.wintz.utils.logging.Lg.makeTAG;
 
 class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
@@ -89,11 +86,11 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
 
         @Override
         public void onDisplay(PGraphics image) {
-            final int shortestEdge = Math.min(pApplet.height, pApplet.width - SIDEBAR_WIDTH);
+            final int shortestEdge = Math.min(pApplet.height, pApplet.width );
             final float displayScale = (float) shortestEdge / (float) image.width;
 
             pApplet.scale(displayScale, displayScale);
-            pApplet.image(image, SIDEBAR_WIDTH / displayScale, 0);
+            pApplet.image(image, 0, 0);
             pApplet.scale(1 / displayScale, 1 / displayScale);
         }
     }

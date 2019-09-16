@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="animatedgif:jar">
+    <output-path>$PROJECT_DIR$/../SpiroAndoird/libs</output-path>
+    <root id="archive" name="animatedgif.jar">
+      <element id="module-output" name="animatedgif" />
+      <element id="extracted-dir" path="$USER_HOME$/EclipseWorkspace/External Jars/Processing-3.3/core.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

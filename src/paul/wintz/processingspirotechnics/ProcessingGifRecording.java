@@ -73,7 +73,6 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
 
         Lg.i(TAG, "Closing GIF. Number of frames: " + framesRecorded);
 
-
         gifRecorder = null;
         file = null;
     }
