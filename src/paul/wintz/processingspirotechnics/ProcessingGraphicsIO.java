@@ -8,6 +8,7 @@ import paul.wintz.utils.logging.Lg;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -97,6 +98,7 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
 
     private static class PGraphicsImageSaver implements ImageSaver<PGraphics> {
 
+        @Nonnull
         @Override
         public File save(PGraphics image) throws IOException {
             File tempFile = File.createTempFile("spirotechnic", ".png");

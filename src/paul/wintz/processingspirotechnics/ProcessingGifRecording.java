@@ -1,6 +1,7 @@
 package paul.wintz.processingspirotechnics;
 
 import paul.wintz.parametricequationdrawer.GraphicsIO;
+import paul.wintz.utils.Toast;
 import paul.wintz.utils.logging.Lg;
 import processing.core.PGraphics;
 import sojamo.animatedgif.GifRecorder;
@@ -11,11 +12,13 @@ import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static java.lang.Math.round;
 import static paul.wintz.utils.Utils.checkPositive;
 import static paul.wintz.utils.logging.Lg.makeTAG;
 
 class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
     private static final String TAG = makeTAG(ProcessingGifRecording.class);
+    public static final long MB_LIMIT = 10L;
 
     private GifRecorder gifRecorder;
 
@@ -102,7 +105,10 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
                 Lg.v(TAG, "Thread started");
                 gifRecorder.save();
                 gifRecorder.clear();
-                printMaxFramesToBeUnderGivenFileSize(3L * BYTES_IN_MEGABYTE, file, framesRecorded);
+                final double maxFrames = getMaxFramesToFitFileSize(MB_LIMIT * BYTES_IN_MEGABYTE, file, (double) framesRecorded);
+                String message = String.format("A maximum of %d frames \nwill fit in %d bytes.", round(maxFrames), MB_LIMIT * BYTES_IN_MEGABYTE);
+                Lg.i(TAG, message);
+                Toast.show(message);
                 onFileFinished.accept(file);
                 Lg.v(TAG, "Thread finished");
             }catch (Exception e) {
@@ -111,9 +117,8 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
         }
     }
 
-    private static void printMaxFramesToBeUnderGivenFileSize(long maxSize, File file, double framesRecorded) {
+    private static double getMaxFramesToFitFileSize(long maxSize, File file, double framesRecorded) {
         final double sizePerFrame = (double) file.length() / framesRecorded;
-        final double maxNumber = maxSize / sizePerFrame;
-        Lg.i(TAG, "The maximum number of frames is: " + maxNumber + " to fit in " + maxSize + " bytes.");
+        return maxSize / sizePerFrame;
     }
 }
