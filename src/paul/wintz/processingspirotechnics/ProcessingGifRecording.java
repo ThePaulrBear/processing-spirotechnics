@@ -6,12 +6,14 @@ import paul.wintz.utils.logging.Lg;
 import processing.core.PGraphics;
 import sojamo.animatedgif.GifRecorder;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
+import static java.lang.Math.floor;
 import static java.lang.Math.round;
 import static paul.wintz.utils.Utils.checkPositive;
 import static paul.wintz.utils.logging.Lg.makeTAG;
@@ -47,6 +49,11 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
     }
 
     @Override
+    public String getExtension() {
+        return ".gif";
+    }
+
+    @Override
     public void addFrame(PGraphics frame) {
         checkState(isOpen, "The GIF is not open");
 
@@ -64,7 +71,7 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
     }
 
     @Override
-    public void close(Consumer<File> onFileFinished) {
+    public void close(@Nonnull Consumer<File> onFileFinished) {
         checkState(isOpen, "The GIF is not open");
         checkNotNull(gifRecorder);
         checkNotNull(file);
@@ -102,17 +109,17 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
         @Override
         public void run() {
             try {
-                Lg.v(TAG, "Thread started");
-                gifRecorder.save();
+                Lg.v(TAG, "Thread started for saving GIF");
+                gifRecorder.save(); // THIS IS TIME-CONSUMING.
                 gifRecorder.clear();
                 final double maxFrames = getMaxFramesToFitFileSize(MB_LIMIT * BYTES_IN_MEGABYTE, file, (double) framesRecorded);
-                String message = String.format("A maximum of %d frames \nwill fit in %d bytes.", round(maxFrames), MB_LIMIT * BYTES_IN_MEGABYTE);
+                String message = String.format("Saving GIF finished. A maximum of %d frames will fit in %d bytes.", round(floor(maxFrames)), MB_LIMIT * BYTES_IN_MEGABYTE);
                 Lg.i(TAG, message);
                 Toast.show(message);
                 onFileFinished.accept(file);
-                Lg.v(TAG, "Thread finished");
+                Lg.v(TAG, "Thread finished for saving GIF.");
             }catch (Exception e) {
-                Lg.e(TAG, "Failed to save? ", e);
+                Lg.e(TAG, "GIF Failed to save? ", e);
             }
         }
     }

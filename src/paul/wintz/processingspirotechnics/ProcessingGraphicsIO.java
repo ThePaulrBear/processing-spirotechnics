@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static java.lang.Float.min;
 import static paul.wintz.utils.logging.Lg.makeTAG;
 
 class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
@@ -88,7 +89,7 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
         @Override
         public void onDisplay(PGraphics image) {
             final int shortestEdge = Math.min(pApplet.height, pApplet.width );
-            final float displayScale = (float) shortestEdge / (float) image.width;
+            final float displayScale = min(1, (float) shortestEdge / (float) image.width);
 
             pApplet.scale(displayScale, displayScale);
             pApplet.image(image, 0, 0);
@@ -100,14 +101,13 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
 
         @Nonnull
         @Override
-        public File save(PGraphics image) throws IOException {
-            File tempFile = File.createTempFile("spirotechnic", ".png");
-            Lg.d(TAG, "File saving to: " + tempFile);
-            tempFile.deleteOnExit();
-            image.save(tempFile.getAbsolutePath());
-            return tempFile;
+        public File save(PGraphics image, File directory, String baseName) throws IOException {
+            File file = new File(directory, baseName + ".png");
+            Lg.d(TAG, "File saving to: " + file);
+            file.deleteOnExit();
+            image.save(file.getAbsolutePath());
+            return file;
         }
-
     }
 
 }
