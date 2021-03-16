@@ -23,7 +23,8 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
     private final PGraphicsToPAppletDisplayer pGraphicsToPAppletDisplayer;
     private final PGraphicsLayerCompositor pGraphicsLayerCompositor = new PGraphicsLayerCompositor();
     private final PGraphicsImageSaver pGraphicsImageSaver = new PGraphicsImageSaver();
-    private final ProcessingGifRecording processingGifRecording = new ProcessingGifRecording();
+    private final AnimationIO<PGraphics> processingGifRecording = new ProcessingGifRecording();
+    private final AnimationIO<PGraphics> processingVideoRecording = new ProcessingVideoRecording();
 
     ProcessingGraphicsIO(PApplet pApplet) {
         pGraphicsToPAppletDisplayer = new PGraphicsToPAppletDisplayer(pApplet);
@@ -51,7 +52,8 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
 
     @Override
     public AnimationIO<PGraphics> getAnimationRecorder() {
-        return processingGifRecording;
+//        return processingGifRecording;
+        return processingVideoRecording;
     }
 
     private static final class PGraphicsLayerFactory implements LayerFactory<PGraphics> {

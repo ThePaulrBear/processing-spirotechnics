@@ -31,17 +31,17 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
     private final static long BYTES_IN_MEGABYTE = 1024*1024;
 
     @Override
-    public void open(File file) {
+    public void open(File tempFile) {
         checkState(!isOpen, "GifRecording is already open");
         checkState(gifRecorder == null, "gifRecorder must be null");
 
-        this.file = checkNotNull(file);
-        Lg.i(TAG, "Beginning GIF record to: " + file.getAbsolutePath());
+        this.file = checkNotNull(tempFile);
+        Lg.i(TAG, "Beginning GIF record to: " + tempFile.getAbsolutePath());
         framesRecorded = 0;
 
         gifRecorder = new GifRecorder(500, 500);
         gifRecorder.clear();
-        gifRecorder.setFile(file)
+        gifRecorder.setFile(tempFile)
                 .setFramesPerSecond((int) fps)
                 .setLoop(true);
 
@@ -79,7 +79,7 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
         isOpen = false;
 
         Lg.v(TAG, "Starting save");
-        Executors.newSingleThreadExecutor().submit(new SaveGifFileRunnable(gifRecorder, file, onFileFinished));
+        Executors.newSingleThreadExecutor().submit(new CloseGifRunnable(gifRecorder, file, onFileFinished));
 
         Lg.i(TAG, "Closing GIF. Number of frames: " + framesRecorded);
 
@@ -94,13 +94,13 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
         this.fps = fps;
     }
 
-    private class SaveGifFileRunnable implements Runnable {
+    private class CloseGifRunnable implements Runnable {
         private final GifRecorder gifRecorder;
         private final File file;
         private final Consumer<File> onFileFinished;
         private final int framesRecorded = ProcessingGifRecording.this.framesRecorded;
 
-        public SaveGifFileRunnable(GifRecorder gifRecorder, File file, Consumer<File> onFileFinished) {
+        public CloseGifRunnable(GifRecorder gifRecorder, File file, Consumer<File> onFileFinished) {
             this.gifRecorder = checkNotNull(gifRecorder);
             this.file = checkNotNull(file);;
             this.onFileFinished = checkNotNull(onFileFinished);
@@ -108,19 +108,20 @@ class ProcessingGifRecording implements GraphicsIO.AnimationIO<PGraphics> {
 
         @Override
         public void run() {
+            Lg.v(TAG, "Thread started for saving GIF");
             try {
-                Lg.v(TAG, "Thread started for saving GIF");
                 gifRecorder.save(); // THIS IS TIME-CONSUMING.
                 gifRecorder.clear();
-                final double maxFrames = getMaxFramesToFitFileSize(MB_LIMIT * BYTES_IN_MEGABYTE, file, (double) framesRecorded);
-                String message = String.format("Saving GIF finished. A maximum of %d frames will fit in %d bytes.", round(floor(maxFrames)), MB_LIMIT * BYTES_IN_MEGABYTE);
-                Lg.i(TAG, message);
-                Toast.show(message);
-                onFileFinished.accept(file);
-                Lg.v(TAG, "Thread finished for saving GIF.");
             }catch (Exception e) {
                 Lg.e(TAG, "GIF Failed to save? ", e);
+                Toast.show("Saving animation failed.");
+                return;
             }
+            final double maxFrames = getMaxFramesToFitFileSize(MB_LIMIT * BYTES_IN_MEGABYTE, file, (double) framesRecorded);
+            String message = String.format("Saving GIF finished. A maximum of %d frames will fit in %d bytes.", round(floor(maxFrames)), MB_LIMIT * BYTES_IN_MEGABYTE);
+            Lg.i(TAG, message);
+            Toast.show(message);
+            onFileFinished.accept(file);
         }
     }
 
