@@ -90,8 +90,9 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
 
         @Override
         public void onDisplay(PGraphics image) {
-            final int shortestEdge = Math.min(pApplet.height, pApplet.width );
-            final float displayScale = min(1, (float) shortestEdge / (float) image.width);
+            final float maxWidthScale =  min(1, (float) pApplet.width / (float) image.width);
+            final float maxHeightScale =  min(1, (float) pApplet.height / (float) image.height);
+            final float displayScale = min(maxWidthScale, maxHeightScale);
 
             pApplet.scale(displayScale, displayScale);
             pApplet.image(image, 0, 0);

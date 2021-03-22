@@ -17,7 +17,7 @@ class EnglishStrings {
             .putStringId(SEGMENT_COUNT_CHANGED_TO, "Segment count changed to %d")
             .putStringId(CONTACT_CIRCLE_ROTATION_CHANGED, "Rotation Offset Circle Changed to %d")
             .putStringId(LOADED_GRAPH, "Loaded graph:\nRadii: %s\nVelocities: %s")
-            .putStringId(CANVAS_SIZE_CHANGED, "Canvas size changed to %dx%<d")
+            .putStringId(CANVAS_SIZE_CHANGED, "Canvas size changed to %dx%d")
             .putStringId(ZOOM_CHANGED_TO, "Zoom changed to %.2fx")
             .putStringId(FRAME_SAVED, "Frame #%d of %d saved")
             .build();
