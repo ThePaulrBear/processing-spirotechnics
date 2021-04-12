@@ -51,9 +51,17 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
     }
 
     @Override
-    public AnimationIO<PGraphics> getAnimationRecorder() {
-//        return processingGifRecording;
-        return processingVideoRecording;
+    public AnimationIOFactory<PGraphics> getAnimationRecorderFactory() {
+        return fileType -> {
+            if("gif".equals(fileType)){
+                return processingGifRecording;
+            } else if ("mp4".equals(fileType)) {
+                return processingVideoRecording;
+            } else {
+                throw new RuntimeException("File type not supported: " + fileType);
+            }
+
+        };
     }
 
     private static final class PGraphicsLayerFactory implements LayerFactory<PGraphics> {
@@ -112,5 +120,6 @@ class ProcessingGraphicsIO implements GraphicsIO<PGraphics> {
             return file;
         }
     }
+
 
 }
